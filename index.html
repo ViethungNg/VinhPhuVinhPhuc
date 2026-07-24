@@ -1,0 +1,1709 @@
+﻿<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hội Nghị Nhà Phân Phối Vĩnh Phú - PMT Group</title>
+
+  <script src="data.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <link rel="icon" id="appFavicon" href="logo PMT.png" type="image/png" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <!-- Script tạo favicon vuông: logo hiển thị đầy đủ, không bị cắt, không bị méo -->
+  <script>
+    (function () {
+      var img = new Image();
+      img.onload = function () {
+        var size = 64;
+        var canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext('2d');
+        // Tính tỉ lệ để logo vừa khít ô vuông (contain)
+        var scale = Math.min(size / img.width, size / img.height);
+        var w = img.width * scale;
+        var h = img.height * scale;
+        var x = (size - w) / 2;
+        var y = (size - h) / 2;
+        ctx.drawImage(img, x, y, w, h);
+        var link = document.getElementById('appFavicon');
+        if (link) link.href = canvas.toDataURL('image/png');
+      };
+      img.src = 'logo PMT.png';
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+
+<body>
+  <canvas id="fireworks"></canvas>
+
+  <div id="tsparticles"></div>
+
+  <audio id="audioSpin" src="/audio/nhacnen.mp3" loop></audio>
+  <audio id="audioWin" src="/audio/tingting.mp3"></audio>
+  <audio id="audioFinal" src="/audio/nhaccongbogiai.mp3" loop></audio>
+
+  <header class="app-header">
+    <div class="lantern-left">✨</div>
+    <div class="header-logos">
+      <img src="Logo/logo trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
+      <img src="Logo/logo giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
+        title="Bấm để tải lại trang" onerror="this.style.display='none'" />
+      <img src="Logo/logo phai.png" alt="Logo Phải" class="header-logo" onerror="this.style.display='none'" />
+      <img src="Logo/logo HV trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
+      <img src="Logo/logo PMT giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
+        title="Bấm để tải lại trang" onerror="this.style.display='none'" />
+      <img src="Logo/logo PD phai.png" alt="Logo Phải" class="header-logo" id="logoPDPhai" onerror="this.style.display='none'" />
+    </div>
+    <div class="lantern-right">✨</div>
+  </header>
+
+  <div class="alert-box" id="quitAlert">
+    <h2 style="color: var(--tet-red-bright); margin-bottom: 10px">⚠️ CẢNH BÁO</h2>
+    <p id="quitMsg" style="font-size: 1.2rem; color: #333; margin-bottom: 20px">
+      Nhân viên này đã nghỉ việc!
+    </p>
+    <button onclick="closeQuitAlert()" style="
+          background: #555;
+          color: #fff;
+          padding: 10px 30px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        ">
+      QUAY LẠI
+    </button>
+  </div>
+
+  <div id="confirmModal" class="modal-overlay">
+    <div class="confirm-box">
+      <h3>⚙️ CÀI ĐẶT LẠI</h3>
+      <p style="
+            text-align: center;
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+          ">
+        Bạn có chắc chắn muốn xóa hết lịch sử trúng thưởng và <br /><b>làm mới chương trình từ đầu</b>
+        không?
+      </p>
+      <div class="confirm-buttons">
+        <button class="btn-cancel" onclick="closeConfirmModal()">
+          HỦY BỎ
+        </button>
+        <button class="btn-ok" onclick="executeReset()">ĐỒNG Ý</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="finalScreen" class="final-screen">
+    <canvas id="popupFireworks"></canvas>
+
+    <h1 class="final-title">
+      🏆 <span id="finalTitleText">DANH SÁCH TRÚNG GIẢI</span> 🏆
+    </h1>
+    <img id="summaryPrizeImg" src="" alt="Giải thưởng" />
+
+    <div class="final-table-container" id="finalTableContainer">
+      <table class="final-table" id="finalTable">
+        <thead>
+          <tr>
+            <th style="width: 70px">STT</th>
+            <th style="width: 220px">GIẢI</th>
+            <th style="width: 140px">MÃ QUAY</th>
+          </tr>
+        </thead>
+        <tbody id="finalTableBody"></tbody>
+      </table>
+
+      <!-- Grid 3 cột cho bảng tổng kết (sẽ được tạo động bằng JS) -->
+      <div id="threeColumnGrid" class="three-column-grid" style="display: none;"></div>
+    </div>
+
+    <div class="modal-btn-group" id="finalBtnGroup">
+      <button id="finalBtn" class="final-btn" onclick="handleFinalBtnClick()">
+        TIẾP TỤC
+      </button>
+    </div>
+    <p id="redrawHint" style="display:none; margin-top:14px; color:rgba(255,255,255,0.6); font-size:0.92rem; font-style:italic; position:relative; z-index:2; text-align:center; line-height:2;">
+      Nhấn <kbd style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:5px;padding:2px 8px;font-weight:700;color:#FFD700;">R</kbd> nếu người trúng vắng mặt để quay bù
+    </p>
+  </div>
+
+  <div class="container">
+    <div class="tet-panel prize-panel">
+
+      <!-- View bình thường khi đang quay giải -->
+      <div id="singlePrizeView" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+        <div class="prize-title-box">
+          <div class="prize-name" id="displayPrizeTitle">GIẢI THƯỞNG</div>
+        </div>
+        <img src="" id="prizeImage" class="prize-img" alt="Hình giải thưởng" style="display: none" />
+        <div id="displayPrizeDetail" class="prize-detail"></div>
+        <p id="welcomeNote" style="
+              margin-top: auto;
+              color: #ffd700;
+              opacity: 0.8;
+              font-style: italic;
+            ">
+          Hội nghị nhà phân phối Vĩnh Phú 2026
+        </p>
+      </div>
+
+      <!-- View tổng kết: hiển thị TẤT CẢ người trúng giải -->
+      <div id="allPrizesView" style="display: none; flex-direction: column; width: 100%; height: 100%; overflow: hidden;">
+        <div style="text-align: center; padding: 12px 5px 10px; background: linear-gradient(135deg, #5c0000, #380000); border-bottom: 2px solid rgba(255,255,255,0.25);">
+          <div style="color: #FFD700; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.15rem; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255,215,0,0.5);">🏆 TẤT CẢ GIẢI THƯỞNG 🏆</div>
+        </div>
+        <div id="allPrizesList" style="flex: 1; overflow-y: auto; padding: 8px 7px; display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+
+    </div>
+
+    <div class="tet-panel stage-area">
+      <!-- Wrapper mới chứa slots và nút quay -->
+      <div class="slots-and-button-wrapper">
+        <div class="slots-wrapper">
+          <div class="slot-window">
+            <div class="reel" id="reel0">
+              <div class="reel-cell">0</div>
+            </div>
+          </div>
+          <div class="slot-window">
+            <div class="reel" id="reel1">
+              <div class="reel-cell">0</div>
+            </div>
+          </div>
+          <div class="slot-window">
+            <div class="reel" id="reel2">
+              <div class="reel-cell">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="winner-info-area" id="winnerInfo">
+        <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>Vĩnh Phú</div>
+        <div class="winner-detail">Tri Ân Đối Tác</div>
+      </div>
+
+      <p class="instruction-text">
+        Hưng Yên, ngày 03 tháng 07 năm 2026
+      </p>
+    </div>
+
+
+    <div class="tet-panel sidebar">
+      <div class="sidebar-header">
+        <h3>🏆 DANH SÁCH TRÚNG GIẢI 🏆</h3>
+      </div>
+
+      <div class="history-list" id="historyList"></div>
+
+      <div class="sidebar-footer">
+        <button onclick="requestReset()" class="icon-btn" data-tooltip="Cài đặt lại (Reset)">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+          </svg>
+        </button>
+        <button onclick="exportToPDF()" class="icon-btn" data-tooltip="Tải danh sách PDF">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nút quay – kéo thả tự do, đặt trực tiếp vào body để tránh bị backdrop-filter giam -->
+  <div class="spin-button-wrapper" id="spinBtnWrapper">
+    <div class="drag-handle" id="dragHandle"></div>
+    <span class="drag-tip">⠿ Giữ Ctrl + Kéo để di chuyển</span>
+    <button class="btn-spin" id="spinBtn" onclick="spin()">
+      BẮT ĐẦU<br>CHƯƠNG TRÌNH
+    </button>
+  </div>
+
+  <!-- ===== THUMB TỔNG QUAN GIẢI THƯỞNG (Phím 1 = hiện, Phím 2 = ẩn) ===== -->
+  <div id="awardThumbOverlay" class="award-thumb-overlay">
+    <div class="award-thumb-card">
+      <div class="award-thumb-header">
+        <div class="award-thumb-title">🏆 TỔNG QUAN GIẢI THƯỞNG 🏆</div>
+        <div class="award-thumb-subtitle">Hội Nghị Nhà Phân Phối Vĩnh Phú 2026</div>
+        <button class="award-thumb-close" onclick="hideAwardThumb()" title="Đóng (phím 2)">✕</button>
+      </div>
+      <div class="award-thumb-body" id="awardThumbBody">
+        <!-- Nội dung được tạo tự động từ JS -->
+      </div>
+      <div class="award-thumb-footer">
+        <span class="award-thumb-hint">⌨️ Phím <kbd>1</kbd> Hiện &nbsp;|&nbsp; Phím <kbd>2</kbd> Ẩn</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let dbEmployees = {};
+    let validCodes = [];
+    let usedCodes = [];
+    let allWinners = [];
+
+    let currentBatchIndex = 0;
+    let isSpinning = false;
+    let programStarted = false;
+    let pendingRedrawPrize = null;
+    let currentPopupWinners = null; // ⭐ Lưu danh sách người trúng của popup hiện tại (dùng cho phím R)
+
+    // ⭐ QUẢN LÝ PHIÊN PHÁO HOA: chỉ cho phép 1 phiên chạy tại một thời điểm
+    let _fireworksStopFlag = null; // Hàm gọi để dừng phiên pháo hoa hiện tại
+    function stopCurrentFireworks() {
+      if (_fireworksStopFlag) {
+        _fireworksStopFlag();
+        _fireworksStopFlag = null;
+      }
+      // Xóa canvas
+      const fw = document.getElementById('popupFireworks');
+      if (fw) {
+        const fwCtx = fw.getContext('2d');
+        fwCtx.clearRect(0, 0, fw.width, fw.height);
+      }
+    }
+
+    const CELL_HEIGHT = 170;
+
+    window.onload = function () {
+      loadDataFromExcel();
+    };
+
+    // ⭐ TỰ ĐỘNG ĐỌC EXCEL TRONG THƯ MỤC
+    async function loadDataFromExcel() {
+      // BƯỚC 1: Xóa sạch danh sách mẫu (Khách hàng 0001->0200) được sinh tự động ở data.js
+      DANH_SACH_NHAN_VIEN.length = 0;
+
+      try {
+        // Bỏ cache để luôn lấy file excel mới nhất khi F5
+        const url = 'danhsachkhachmoi.xlsx?t=' + new Date().getTime();
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Không tải được file Excel");
+
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+        if (jsonData.length > 0) {
+          jsonData.forEach(row => {
+            // Lấy tự động linh hoạt, tránh lỗi khoảng trắng ở file Excel
+            let code = row['Mã quay thưởng'];
+
+            if (code == null) {
+              for (let key in row) {
+                const cleanKey = key.trim().toLowerCase();
+                if (cleanKey === 'mã quay thưởng') code = row[key];
+              }
+            }
+
+            if (code != null) {
+              DANH_SACH_NHAN_VIEN.push({
+                code: String(code).padStart(3, '0'),
+                pos: 'Đại lý',
+                status: 1
+              });
+            }
+          });
+        }
+      } catch (error) {
+        console.warn("Lỗi đọc Excel:", error);
+      } finally {
+        // BƯỚC 2: Kiểm tra lại. Nếu không có ai thì báo lỗi rõ ràng.
+        if (DANH_SACH_NHAN_VIEN.length === 0) {
+          alert("⚠️ LỖI NGHIÊM TRỌNG:\n\nKhông thể đọc được danh sách từ Excel.\nHãy đảm bảo:\n1. Tên file đúng là: excel/danhsachkhachmoi.xlsx\n2. Mở file HTML qua công cụ Live Server (không click đúp).");
+        }
+        loadDataFromJS(); // Khởi tạo app sau khi đã có dữ liệu
+      }
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        const j = randomBuffer[0] % (i + 1);
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function loadDataFromJS() {
+      if (
+        typeof DANH_SACH_NHAN_VIEN === "undefined" ||
+        typeof KICH_BAN_QUAY === "undefined"
+      ) {
+        alert(
+          "Lỗi: Không tìm thấy file data.js hoặc thiếu cấu hình KICH_BAN_QUAY!",
+        );
+        return;
+      }
+
+      DANH_SACH_NHAN_VIEN.forEach((emp, index) => {
+        emp.originalIndex = index;
+      });
+
+      shuffleArray(DANH_SACH_NHAN_VIEN);
+
+      dbEmployees = {};
+      validCodes = [];
+      DANH_SACH_NHAN_VIEN.forEach((emp) => {
+        dbEmployees[emp.code] = {
+          pos: emp.pos,
+          status: emp.status,
+          originalIndex: emp.originalIndex,
+        };
+        validCodes.push(emp.code);
+      });
+
+      if (KICH_BAN_QUAY.length > 0) {
+        setupIntroUI();
+      } else {
+        alert("Kịch bản quay thưởng trống!");
+      }
+    }
+
+    function setupIntroUI() {
+        document.getElementById("singlePrizeView").style.display = "flex";
+        document.getElementById("allPrizesView").style.display = "none";
+
+      document.getElementById("displayPrizeTitle").innerText = "GIẢI THƯỞNG";
+      document.getElementById("displayPrizeDetail").innerText = "";
+      document.getElementById("prizeImage").style.display = "none";
+      document.getElementById("spinBtn").innerText = "BẮT ĐẦU CHƯƠNG TRÌNH";
+
+      document.getElementById("winnerInfo").innerHTML = `
+                <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>Vĩnh Phú</div>
+                <div class="winner-detail" style="background:none; border:none; box-shadow:none; padding:0; color: var(--tet-gold); opacity: 0.9; font-size: 2rem;"></div>
+            `;
+
+      programStarted = false;
+      currentBatchIndex = 0;
+    }
+
+    function updateUIForNextBatch() {
+      if (currentBatchIndex < KICH_BAN_QUAY.length) {
+        const batchData = KICH_BAN_QUAY[currentBatchIndex];
+        const prizeInfo = CONFIG_GIAI_THUONG[batchData.prizeId];
+
+        document.getElementById("displayPrizeTitle").innerText =
+          batchData.label;
+        document.getElementById("displayPrizeDetail").innerHTML =
+          `${prizeInfo.detail}`;
+
+        const defaultChars = ["0", "0", "0"];
+        for (let i = 0; i < 3; i++) {
+          const reel = document.getElementById(`reel${i}`);
+          reel.style.transition = "none";
+          reel.style.transform = "translateY(0)";
+          reel.innerHTML = `<div class="reel-cell" style="color:var(--tet-red-bright)">${defaultChars[i]}</div>`;
+        }
+
+        document.getElementById("winnerInfo").innerHTML =
+          `<div class="winner-name" style="font-size:2.5rem; opacity: 0.8">SẴN SÀNG</div>`;
+
+        const btn = document.getElementById("spinBtn");
+        btn.innerText = `QUAY`;
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        btn.style.pointerEvents = "none";
+
+        const imgEl = document.getElementById("prizeImage");
+        imgEl.style.display = "block";
+        imgEl.src = `img/giai${batchData.prizeId}.png`;
+        imgEl.onerror = function () {
+          this.src = `img/giai${batchData.prizeId}.jpg`;
+        };
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          btn.style.pointerEvents = "auto";
+          btn.style.cursor = "pointer";
+        }, 800);
+      } else {
+        showSummaryModal("final");
+      }
+    }
+
+
+    async function spin() {
+      if (pendingRedrawPrize !== null) {
+        await executeRedraw();
+        return;
+      }
+
+      if (!programStarted) {
+        programStarted = true;
+        updateUIForNextBatch();
+        return;
+      }
+
+      if (isSpinning) return;
+
+      const batchData = KICH_BAN_QUAY[currentBatchIndex];
+      const quantity = batchData.count;
+      const prizeId = batchData.prizeId;
+
+      const batchWinners = [];
+      let availableCandidates = validCodes.filter(
+        (c) => !usedCodes.includes(c),
+      );
+
+      for (let i = 0; i < quantity; i++) {
+        if (availableCandidates.length === 0) {
+          alert("Hết nhân viên!");
+          break;
+        }
+
+        // Thay đổi: Chọn ngẫu nhiên tuyệt đối, xóa bỏ logic "giãn khoảng cách" để đảm bảo công bằng 100%
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        const randomIndex = randomBuffer[0] % availableCandidates.length;
+        const selectedCandidate = availableCandidates[randomIndex];
+        const bestCandidateIndex = randomIndex;
+
+        const emp = dbEmployees[selectedCandidate];
+        batchWinners.push({
+          prize: batchData.prizeId,
+          code: selectedCandidate,
+          pos: emp.pos,
+        });
+
+        usedCodes.push(selectedCandidate);
+        availableCandidates.splice(bestCandidateIndex, 1);
+      }
+
+      if (batchWinners.length === 0) return;
+
+      isSpinning = true;
+      const btn = document.getElementById("spinBtn");
+      btn.disabled = true;
+      btn.style.opacity = "0";
+
+      for (let i = 0; i < batchWinners.length; i++) {
+        const winner = batchWinners[i];
+        let chars = String(winner.code).split("");
+        while (chars.length < 3) chars.unshift("0");
+
+        let currentPrizeCount = allWinners.filter(w => w.prize === prizeId).length;
+        let totalPrizeCount = CONFIG_GIAI_THUONG[prizeId].count;
+
+        document.getElementById("winnerInfo").innerHTML =
+          `<div class="winner-name" style="opacity:0.8; font-size: 2rem;">ĐANG QUAY NGƯỜI THỨ ${currentPrizeCount + 1}/${totalPrizeCount}...</div>`;
+
+        const audioSpin = document.getElementById("audioSpin");
+        audioSpin.play().catch(() => { });
+
+        // ⭐ PHÂN BIỆT: Giải đặc biệt vs Giải thường
+        if (prizeId === 1 || prizeId === 2) {
+          // GIẢI ĐẶC BIỆT & GIẢI NHẤT: Dùng hiệu ứng mới (quay cùng lúc, dừng lần lượt)
+          for (let j = 0; j < 3; j++) {
+            document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize');
+          }
+          await spinAllReelsSequential(chars, prizeId);
+          for (let j = 0; j < 3; j++) {
+            document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize');
+          }
+        } else {
+          // CÁC GIẢI THƯỜNG: Dùng cách quay CŨ (Promise.all)
+          await Promise.all([
+            spinReel(0, chars[0], 4200),
+            spinReel(1, chars[1], 5600),
+            spinReel(2, chars[2], 7000)
+          ]);
+        }
+
+        audioSpin.pause();  // ✅ Tạm dừng nhạc nền (KHÔNG reset)
+        const audioWin = document.getElementById("audioWin");
+        audioWin.currentTime = 0;  // ✅ Nhạc tingting thì reset về đầu mỗi lần
+        audioWin.play().catch(() => { });
+
+        // ✅ THÊM CODE: Sau khi tingting kết thúc, phát lại nhạc nền
+        audioWin.onended = function () {
+          audioSpin.play().catch(() => { });
+        };
+
+        document.getElementById("winnerInfo").innerHTML = `
+                    <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">${winner.code}</div>
+                `;
+
+        allWinners.push(winner);
+        renderHistory();
+
+        // ⭐ BẮT ĐẦU CHU KỲ QUAY MỚI NGAY SAU KHI HIỂN THỊ TÊN (nếu chưa phải người cuối)
+
+
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+
+      if (quantity > 1) {
+        showBatchPopup(batchWinners, batchData.label);
+      } else {
+        // Lấy tên giải từ CONFIG_GIAI_THUONG
+        const prizeName = CONFIG_GIAI_THUONG[batchWinners[0].prize].name;
+        showBatchPopup(batchWinners, `CHÚC MỪNG TRÚNG ${prizeName}`);
+      }
+
+      isSpinning = false;
+    }
+
+    // ⭐ HÀM QUAY CŨ (CHO CÁC GIẢI THƯỜNG)
+    function spinReel(index, targetChar, duration) {
+      const reel = document.getElementById(`reel${index}`);
+      const stripLength = 60 + index * 10;
+      const pool = "0123456789";
+      const targetIndex = pool.indexOf(targetChar);
+      let pointer =
+        (((targetIndex - stripLength) % pool.length) + pool.length) %
+        pool.length;
+      let html = "";
+      for (let i = 0; i < stripLength; i++) {
+        const char = pool.charAt(pointer);
+        html += `<div class="reel-cell">${char}</div>`;
+        pointer = (pointer + 1) % pool.length;
+      }
+      html += `<div class="reel-cell" style="color:var(--tet-red-bright)">${targetChar}</div>`;
+      reel.innerHTML = html;
+      reel.style.transition = "none";
+      reel.style.transform = "translateY(0)";
+      reel.offsetHeight;
+      return new Promise((resolve) => {
+        const targetY = -(stripLength * CELL_HEIGHT);
+        reel.style.transition = `transform ${duration}ms cubic-bezier(0.15, 0.9, 0.3, 1)`;
+        reel.style.transform = `translateY(${targetY}px)`;
+        setTimeout(resolve, duration);
+      });
+    }
+
+    // ⭐ HÀM MỚI: QUAY TẤT CẢ SLOT CÙNG LÚC, DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI (CHO GIẢI ĐẶC BIỆT)
+    async function spinAllReelsSequential(targetChars, prizeId) {
+      // Mặc định cho các giải khác nếu dùng hàm này
+      let baseSpinTime = 4000;
+      let stopDelay = 600;
+      let slowDownTime = 3000;
+
+      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp và chậm nhất
+        baseSpinTime = 7500;
+        stopDelay = 1200;
+        slowDownTime = 6000;
+      } else if (prizeId === 2) { // GIẢI NHẤT: Chậm hơn giải thường, có chút hồi hộp
+        baseSpinTime = 6000;
+        stopDelay = 1000;
+        slowDownTime = 4500;
+      }
+      
+      // Bước 1: TẤT CẢ 3 SLOT BẮT ĐẦU QUAY CÙNG LÚC
+      for (let i = 0; i < 3; i++) {
+        const reel = document.getElementById(`reel${i}`);
+        const pool = "0123456789";
+
+        const stripLength = 100;
+        let html = "";
+        for (let j = 0; j < stripLength; j++) {
+          const randomChar = pool.charAt(Math.floor(Math.random() * pool.length));
+          html += `<div class="reel-cell">${randomChar}</div>`;
+        }
+        reel.innerHTML = html;
+
+        reel.style.transition = "none";
+        reel.style.transform = "translateY(0)";
+        reel.offsetHeight;
+
+        const totalSpinDistance = -(stripLength * CELL_HEIGHT);
+        reel.style.transition = `transform ${baseSpinTime}ms linear`;
+        reel.style.transform = `translateY(${totalSpinDistance}px)`;
+      }
+
+      await new Promise(r => setTimeout(r, baseSpinTime));
+
+      // Bước 2: DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI
+      for (let i = 0; i < 3; i++) {
+        const targetChar = targetChars[i];
+
+        // Các slot sau vẫn tiếp tục quay
+        for (let j = i + 1; j < 3; j++) {
+          const reel = document.getElementById(`reel${j}`);
+          const jPool = "0123456789";
+
+          const continuedStripLength = 80;
+          let html = "";
+          for (let k = 0; k < continuedStripLength; k++) {
+            const randomChar = jPool.charAt(Math.floor(Math.random() * jPool.length));
+            html += `<div class="reel-cell">${randomChar}</div>`;
+          }
+          reel.innerHTML = html;
+
+          reel.style.transition = "none";
+          reel.style.transform = "translateY(0)";
+          reel.offsetHeight;
+
+          const continueDistance = -(continuedStripLength * CELL_HEIGHT);
+          reel.style.transition = `transform ${baseSpinTime}ms linear`;
+          reel.style.transform = `translateY(${continueDistance}px)`;
+        }
+
+        // Slot hiện tại GIẢM TỐC và DỪNG
+        await stopReelSlowly(i, targetChar, slowDownTime);
+
+        const slotWindow = document.querySelector(`#reel${i}`).parentElement;
+        slotWindow.classList.add('stopping');
+        setTimeout(() => {
+          slotWindow.classList.remove('stopping');
+        }, 600);
+
+        if (i < 2) {
+          await new Promise(r => setTimeout(r, stopDelay));
+        }
+      }
+    }
+
+    // ⭐ HÀM DỪNG MỘT SLOT VỚI HIỆU ỨNG GIẢM TỐC
+    async function stopReelSlowly(index, targetChar, slowDownTime) {
+      const reel = document.getElementById(`reel${index}`);
+      const pool = "0123456789";
+      const targetIndex = pool.indexOf(targetChar);
+
+      const finalStripLength = 30;
+      let pointer = (((targetIndex - finalStripLength) % pool.length) + pool.length) % pool.length;
+      let html = "";
+
+      for (let i = 0; i < finalStripLength; i++) {
+        const char = pool.charAt(pointer);
+        html += `<div class="reel-cell">${char}</div>`;
+        pointer = (pointer + 1) % pool.length;
+      }
+      html += `<div class="reel-cell" style="color:var(--tet-red-bright)">${targetChar}</div>`;
+
+      reel.innerHTML = html;
+      reel.style.transition = "none";
+      reel.style.transform = "translateY(0)";
+      reel.offsetHeight;
+
+      const targetY = -(finalStripLength * CELL_HEIGHT);
+      reel.style.transition = `transform ${slowDownTime}ms cubic-bezier(0.05, 0.85, 0.2, 0.99)`;
+      reel.style.transform = `translateY(${targetY}px)`;
+
+      return new Promise(resolve => setTimeout(resolve, slowDownTime));
+    }
+
+    function showBatchPopup(winnersList, titleText) {
+      const modal = document.getElementById("finalScreen");
+      const container = document.getElementById("finalTableContainer");
+      const tbody = document.getElementById("finalTableBody");
+      const table = document.getElementById("finalTable");
+      const threeColGrid = document.getElementById("threeColumnGrid");
+      const title = document.getElementById("finalTitleText");
+      const img = document.getElementById("summaryPrizeImg");
+
+      // ✅ Lưu lại danh sách người trúng để phím R có thể truy cập
+      currentPopupWinners = winnersList;
+
+      // ✅ THÊM: Tắt nhạc nền khi hiển thị popup
+      const audioSpin = document.getElementById("audioSpin");
+      if (audioSpin) audioSpin.pause();
+
+      title.innerText = titleText;
+      tbody.innerHTML = "";
+      threeColGrid.innerHTML = "";
+      img.style.display = "none";
+
+      // Reset classes
+      container.classList.remove("three-column-layout");
+      table.style.display = "table";
+      threeColGrid.style.display = "none";
+
+      // Khôi phục nút Tiếp Tục cho popup quay thông thường
+      const btn = document.getElementById("finalBtn");
+      const btnGroup = document.getElementById("finalBtnGroup");
+      if (btn) {
+        btn.innerText = "TIẾP TỤC";
+        btn.onclick = handleFinalBtnClick;
+        btn.style.pointerEvents = "auto";
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+        btn.removeAttribute("data-final");
+      }
+      if (btnGroup) btnGroup.style.display = "none";
+
+      // Luôn ẩn gợi ý phím R (phím R vẫn hoạt động ngầm)
+      const redrawHint = document.getElementById("redrawHint");
+      if (redrawHint) redrawHint.style.display = "none";
+
+      if (winnersList.length === 1) {
+        const w = winnersList[0];
+        const pName = CONFIG_GIAI_THUONG[w.prize].name;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>1</td><td>${pName}</td><td>${w.code}</td>`;
+        tbody.appendChild(tr);
+      }
+      else if (winnersList.length > 1 && winnersList.length <= 10) {
+        winnersList.forEach((w, index) => {
+          const pName = CONFIG_GIAI_THUONG[w.prize].name;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${index + 1}</td><td>${pName}</td><td>${w.code}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      modal.classList.add("active");
+
+      if (winnersList.length > 0 && winnersList[0].prize === 1) {
+        launchCelebrationFireworks();
+      }
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      for (let i = allWinners.length - 1; i >= 0; i--) {
+        const w = allWinners[i];
+        const pName = CONFIG_GIAI_THUONG[w.prize].name;
+        const item = document.createElement("div");
+        item.className = "history-item";
+        item.innerHTML = `
+            <div class="h-info">
+              <div class="h-name" style="font-size: 1.6rem; color: var(--tet-red-deep);">Mã: ${w.code}</div>
+            </div>
+            <div style="text-align: right;">
+              <span class="h-badge">${pName}</span><br>
+            </div>
+          `;
+        list.appendChild(item);
+      }
+    }
+
+    // ⭐ BƯỚC 1: CHUẨN BỊ QUAY BÙ (Khi ấn vắng mặt ở Popup)
+    function prepareRedraw(code, prizeId) {
+      const modal = document.getElementById("finalScreen");
+      modal.classList.remove("active");
+      const audioWin = document.getElementById("audioWin");
+      audioWin.pause();
+      audioWin.currentTime = 0;
+
+      allWinners = allWinners.filter(w => w.code !== code);
+      renderHistory();
+
+      pendingRedrawPrize = prizeId;
+
+      // Reset các ô số về 0
+      const defaultChars = ["0", "0", "0"];
+      for (let i = 0; i < 3; i++) {
+        const reel = document.getElementById(`reel${i}`);
+        reel.style.transition = "none";
+        reel.style.transform = "translateY(0)";
+        reel.innerHTML = `<div class="reel-cell" style="color:var(--tet-red-bright)">${defaultChars[i]}</div>`;
+      }
+
+
+      document.getElementById("winnerInfo").innerHTML = `
+            <div style="
+              display: inline-block;
+              background: linear-gradient(135deg, #c62828, #ff1744);
+              color: #ffffff;
+              font-family: 'Montserrat', sans-serif;
+              font-size: 2rem;
+              font-weight: 900;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+              padding: 14px 28px;
+              border-radius: 50px;
+              border: 3px solid #ffffff;
+              box-shadow: 0 0 25px rgba(255,23,68,0.55), 0 4px 16px rgba(0,0,0,0.4);
+              animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              white-space: nowrap;
+            ">SẴN SÀNG QUAY BÙ</div>
+        `;
+      const btn = document.getElementById("spinBtn");
+      btn.innerText = "QUAY BÙ";
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+      btn.style.cursor = "pointer";
+    }
+
+    // ⭐ BƯỚC 2: THỰC THI QUAY BÙ (Khi bấm nút "QUAY BÙ" hoặc ấn Enter)
+    async function executeRedraw() {
+      if (isSpinning) return;
+      isSpinning = true;
+
+      const prizeId = pendingRedrawPrize;
+      pendingRedrawPrize = null;
+
+      const btn = document.getElementById("spinBtn");
+      btn.disabled = true;
+      btn.style.opacity = "0";
+
+      let availableCandidates = validCodes.filter(c => !usedCodes.includes(c));
+      if (availableCandidates.length === 0) {
+        alert("Hết đại lý để quay bù!");
+        isSpinning = false;
+        return;
+      }
+
+      const randomBuffer = new Uint32Array(1);
+      window.crypto.getRandomValues(randomBuffer);
+      const randomIndex = randomBuffer[0] % availableCandidates.length;
+      const newCandidateCode = availableCandidates[randomIndex];
+      const newEmp = dbEmployees[newCandidateCode];
+
+      usedCodes.push(newCandidateCode);
+      const newWinner = { prize: prizeId, code: newCandidateCode, pos: newEmp.pos };
+
+      let chars = String(newCandidateCode).split("");
+      while (chars.length < 3) chars.unshift("0");
+
+      document.getElementById("winnerInfo").innerHTML = `<div class="winner-name" style="opacity:0.8; font-size: 2rem;">ĐANG QUAY BÙ...</div>`;
+      const audioSpin = document.getElementById("audioSpin");
+      if (audioSpin.paused) audioSpin.play().catch(() => { });
+
+      if (prizeId === 1 || prizeId === 2) {
+        for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize'); };
+        await spinAllReelsSequential(chars, prizeId);
+        for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize'); };
+      } else {
+        await Promise.all([
+          spinReel(0, chars[0], 4200),
+          spinReel(1, chars[1], 5600),
+          spinReel(2, chars[2], 7000)
+        ]);
+      }
+
+      audioSpin.pause();
+      const audioWin = document.getElementById("audioWin");
+      audioWin.currentTime = 0;
+      audioWin.play().catch(() => { });
+      audioWin.onended = function () {
+        audioSpin.play().catch(() => { });
+      };
+
+      document.getElementById("winnerInfo").innerHTML = `
+            <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">${newWinner.code}</div>
+        `;
+
+      allWinners.push(newWinner);
+      renderHistory();
+      isSpinning = false;
+
+      await new Promise(r => setTimeout(r, 3000));
+
+      const currentBatchData = KICH_BAN_QUAY[currentBatchIndex];
+      const quantity = currentBatchData.count;
+      const recentWinners = allWinners.slice(-quantity);
+      showBatchPopup(recentWinners, currentBatchData.label);
+    }
+
+    function handleFinalBtnClick() {
+      const modal = document.getElementById("finalScreen");
+      modal.classList.remove("active");
+      document.getElementById("audioWin").pause();
+      document.getElementById("audioWin").currentTime = 0;
+      currentBatchIndex++;
+      updateUIForNextBatch();
+    }
+
+    // ⭐ CHỨC NĂNG 2: HÀM TẠO MÀU SẮC CHO TÊN GIẢI
+    function getPrizeColorClass(prizeId) {
+      const colorMap = {
+        1: 'prize-color-special',   // Giải đặc biệt - Đỏ rực
+        2: 'prize-color-first',     // Giải nhất - Cam vàng
+        3: 'prize-color-second',    // Giải nhì - Xanh lá
+        4: 'prize-color-third',     // Giải ba - Xanh dương
+        5: 'prize-color-fourth'     // Giải tư - Tím
+      };
+      return colorMap[prizeId] || 'prize-color-default';
+    }
+
+    // ⭐ CHỨC NĂNG 2: HÀM HIỂN THỊ TỔNG KẾT 26 GIẢI DẠNG 4 CỘT VỚI MÀU SẮC
+    function showSummaryModal(type) {
+      const modal = document.getElementById("finalScreen");
+      const container = document.getElementById("finalTableContainer");
+      const table = document.getElementById("finalTable");
+      const threeColGrid = document.getElementById("threeColumnGrid");
+
+      // --- XỬ LÝ NHẠC: Chỉ chạy khi hiện bảng tổng kết ---
+
+      // 1. Tắt hết nhạc đang chạy (nhạc nền + nhạc ting ting)
+      const audioSpin = document.getElementById("audioSpin");
+      const audioWin = document.getElementById("audioWin"); // Đây là nhạc tingting
+      if (audioSpin) audioSpin.pause();
+      if (audioWin) audioWin.pause();
+
+      // 2. Bật nhạc "nhaccongbogiai.mp3" (ID là audioFinal)
+      const audioFinal = document.getElementById("audioFinal");
+      if (audioFinal) {
+        audioFinal.currentTime = 0;
+        audioFinal.play().catch(e => console.log("Chưa tương tác nên chưa phát nhạc được"));
+      }
+
+      document.getElementById("finalTitleText").innerText = "DANH SÁCH TRÚNG GIẢI";
+
+      // Ẩn gợi ý phím R ở màn hình tổng kết cuối
+      const redrawHint = document.getElementById("redrawHint");
+      if (redrawHint) redrawHint.style.display = "none";
+
+      // Ẩn nút Hoàn thành chương trình ở màn hình tổng kết cuối
+      const finalBtnGroup = document.getElementById("finalBtnGroup");
+      if (finalBtnGroup) finalBtnGroup.style.display = "none";
+
+      document.getElementById("finalBtn").setAttribute("data-final", "true");
+
+      // Sắp xếp theo giải (ưu tiên giải đặc biệt lên đầu)
+      const sortedWinners = [...allWinners].sort((a, b) => a.prize - b.prize);
+
+      // Dùng layout 4 cột - mỗi cột là 1 loại giải
+      container.classList.add("three-column-layout");
+      table.style.display = "none";
+      threeColGrid.style.display = "grid";
+      threeColGrid.innerHTML = "";
+
+      // Phân nhóm winners theo prizeId
+      const prizeGroups = { 1: [], 2: [], 3: [], 4: [] };
+      sortedWinners.forEach(w => {
+        if (prizeGroups[w.prize]) prizeGroups[w.prize].push(w);
+      });
+
+      // Danh sách 4 cột theo thứ tự: Đặc Biệt, Nhất, Nhì, Ba
+      const prizeOrder = [1, 2, 3, 4];
+      let globalIndex = 0;
+
+      prizeOrder.forEach(prizeId => {
+        const col = document.createElement("div");
+        col.className = "column-wrapper";
+
+        const winners = prizeGroups[prizeId] || [];
+        winners.forEach(w => {
+          const pName = CONFIG_GIAI_THUONG[w.prize].name;
+          const colorClass = getPrizeColorClass(w.prize);
+          globalIndex++;
+
+          const card = document.createElement("div");
+          card.className = "winner-card";
+          card.style.animationDelay = `${(globalIndex - 1) * 0.08}s`;
+
+          card.innerHTML = `
+            <div class="card-header">
+              <span class="card-number">${globalIndex}</span>
+              <span class="card-prize ${colorClass}">${pName}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-name" style="text-align: center; margin-top: 12px; font-size: 1.8rem; color: var(--tet-red-deep);">Mã: ${w.code}</div>
+            </div>
+          `;
+          col.appendChild(card);
+        });
+
+        threeColGrid.appendChild(col);
+      });
+
+      modal.classList.add("active");
+
+      if (type === "final") {
+        // ⭐ CHỨC NĂNG 3: BẮN PHÁO HOA 3 GIÂY KHI HIỂN THỊ BẢNG TỔNG KẾT
+        launchCelebrationFireworks(3000);
+
+        // Hiển thị tất cả người trúng giải bên màn hình trái
+        document.getElementById("singlePrizeView").style.display = "none";
+        document.getElementById("allPrizesView").style.display = "flex";
+        
+        const allPrizesList = document.getElementById("allPrizesList");
+        allPrizesList.innerHTML = "";
+        
+        // Chỉ hiển thị các giải: Đặc biệt(1), Nhất(2), Nhì(3), Ba(4)
+        const displayPrizeIds = [1, 2, 3, 4];
+        displayPrizeIds.forEach(prizeId => {
+          if (!CONFIG_GIAI_THUONG[prizeId]) return;
+          const prize = CONFIG_GIAI_THUONG[prizeId];
+          const colorClass = getPrizeColorClass(prizeId);
+
+          const groupDiv = document.createElement("div");
+          groupDiv.className = "all-prize-card";
+
+          // Hiển thị: Tên giải - Ảnh - Tên giải thưởng
+          groupDiv.innerHTML = `
+            <div class="apc-header">
+              <span class="card-prize ${colorClass} apc-prize-name">${prize.name}</span>
+            </div>
+            <div class="apc-img-wrap">
+              <img class="apc-img" src="img/giai${prizeId}.png"
+                onerror="if(!this.src.endsWith('.jpg')){this.src='img/giai${prizeId}.jpg';}else{this.parentElement.style.display='none';}"
+                alt="${prize.name}" />
+            </div>
+            <div class="apc-detail">${prize.detail}</div>
+          `;
+
+          allPrizesList.appendChild(groupDiv);
+        });
+      }
+    }
+
+    function exportToPDF() {
+      if (allWinners.length === 0) {
+        alert("Chưa có danh sách trúng thưởng để xuất!");
+        return;
+      }
+      const dataToExport = [...allWinners].sort((a, b) => a.prize - b.prize);
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "fixed";
+      wrapper.style.top = "-9999px";
+      wrapper.style.left = "0";
+      wrapper.style.width = "1200px";
+      wrapper.style.background = "#FFF8E1";
+      wrapper.style.padding = "40px";
+      wrapper.style.fontFamily = "Montserrat, sans-serif";
+      wrapper.style.color = "#333";
+      wrapper.style.boxSizing = "border-box";
+
+      const h2 = document.createElement("h2");
+      h2.innerText = "DANH SÁCH TRÚNG GIẢI CHƯƠNG TRÌNH HỘI NGHỊ";
+      h2.style.textAlign = "center";
+      h2.style.color = "#d32f2f";
+      h2.style.fontSize = "28px";
+      h2.style.marginBottom = "30px";
+      h2.style.textTransform = "uppercase";
+      h2.style.fontWeight = "900";
+      wrapper.appendChild(h2);
+
+      const table = document.createElement("table");
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.fontSize = "16px";
+
+      const thead = document.createElement("thead");
+      thead.innerHTML = `<tr style="background: #b71c1c; color: #FFFFFF;">
+                <th style="padding:15px; border:1px solid #FFFFFF;">STT</th>
+                <th style="padding:15px; border:1px solid #FFFFFF;">GIẢI THƯỞNG</th>
+                <th style="padding:15px; border:1px solid #FFFFFF;">MÃ KH</th>
+            </tr>`;
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      dataToExport.forEach((w, index) => {
+        const pName = CONFIG_GIAI_THUONG[w.prize].name;
+        const tr = document.createElement("tr");
+        const bg = index % 2 === 0 ? "#ffffff" : "#ffebee";
+        tr.innerHTML = `
+                    <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${bg}; font-weight:bold;">${index + 1}</td>
+                    <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${bg}; color:#b71c1c; font-weight:800;">${pName}</td>
+                    <td style="padding:12px; border:1px solid #ccc; text-align:center; background:${bg};">${w.code}</td>
+                `;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrapper.appendChild(table);
+
+      const footer = document.createElement("div");
+      footer.innerText =
+        "Xuất bản lúc: " + new Date().toLocaleString("vi-VN");
+      footer.style.marginTop = "20px";
+      footer.style.textAlign = "right";
+      footer.style.fontSize = "12px";
+      footer.style.fontStyle = "italic";
+      wrapper.appendChild(footer);
+
+      document.body.appendChild(wrapper);
+
+      html2canvas(wrapper, { scale: 2, useCORS: true }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const printWidth = pageWidth - margin * 2;
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfHeight = (imgProps.height * printWidth) / imgProps.width;
+
+        let finalWidth = printWidth;
+        let finalHeight = pdfHeight;
+
+        if (pdfHeight > pageHeight - margin * 2) {
+          finalHeight = pageHeight - margin * 2;
+          finalWidth = (imgProps.width * finalHeight) / imgProps.height;
+        }
+
+        const xPos = (pageWidth - finalWidth) / 2;
+        pdf.addImage(imgData, "PNG", xPos, margin, finalWidth, finalHeight);
+        pdf.save("DanhSachTrungGiaiChuongTrinhQuaySo.pdf");
+        document.body.removeChild(wrapper);
+      });
+    }
+
+    function closeQuitAlert() {
+      document.getElementById("quitAlert").classList.remove("active");
+      isSpinning = false;
+    }
+    function requestReset() {
+      document.getElementById("confirmModal").style.display = "flex";
+    }
+    function closeConfirmModal() {
+      document.getElementById("confirmModal").style.display = "none";
+    }
+    function executeReset() {
+      usedCodes = [];
+      allWinners = [];
+      currentBatchIndex = 0;
+      pendingRedrawPrize = null;
+      document.getElementById("historyList").innerHTML = "";
+      document.getElementById("finalScreen").classList.remove("active");
+      loadDataFromExcel();
+      closeConfirmModal();
+    }
+
+    // ===== THUMB TỔNG QUAN GIẢI THƯỞNG =====
+    // Mapping prizeId -> đường dẫn ảnh
+    const PRIZE_IMAGES = {
+      1: 'img/giai1.png',
+      2: 'img/giai2.jpg',
+      3: 'img/giai3.jpg',
+      4: 'img/giai4.png'
+    };
+
+    function buildAwardThumb() {
+      const body = document.getElementById('awardThumbBody');
+      if (!body) return;
+
+      // Tính tổng số giải
+      let totalPrizes = 0;
+      Object.values(CONFIG_GIAI_THUONG).forEach(g => totalPrizes += g.count);
+
+      let html = `<div class="award-summary-total">Tổng cộng: <strong>${totalPrizes}</strong> giải thưởng</div>`;
+      html += `<div class="award-prizes-grid">`;
+
+      const prizeEntries = Object.entries(CONFIG_GIAI_THUONG).sort((a, b) => Number(a[0]) - Number(b[0]));
+      prizeEntries.forEach(([id, prize], idx) => {
+        const isSpecial = idx === 0;
+        const imgSrc = PRIZE_IMAGES[Number(id)] || '';
+        html += `
+          <div class="award-prize-row ${isSpecial ? 'award-prize-special' : ''}">
+            <div class="award-prize-img-wrap">
+              ${imgSrc ? `<img src="${imgSrc}" alt="${prize.name}" class="award-prize-thumb" onerror="this.style.display='none'">` : '<div class="award-prize-no-img">🎁</div>'}
+            </div>
+            <div class="award-prize-info">
+              <div class="award-prize-name">${prize.name}</div>
+              <div class="award-prize-detail">${prize.detail}</div>
+            </div>
+            <div class="award-prize-count">
+              <span class="award-count-badge ${isSpecial ? 'badge-gold' : 'badge-silver'}">${prize.count} giải</span>
+            </div>
+          </div>`;
+      });
+      html += `</div>`;
+      body.innerHTML = html;
+    }
+
+    function showAwardThumb() {
+      buildAwardThumb();
+      const overlay = document.getElementById('awardThumbOverlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function hideAwardThumb() {
+      const overlay = document.getElementById('awardThumbOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    // ⭐ CHỨC NĂNG 1: XỬ LÝ PHÍM BẤM
+    document.addEventListener("keydown", function (event) {
+      // ⭐ PHÍM 1: Hiện thumb tổng quan giải thưởng
+      if (event.key === '1') {
+        event.preventDefault();
+        showAwardThumb();
+        return;
+      }
+      // ⭐ PHÍM 2: Ẩn thumb tổng quan giải thưởng
+      if (event.key === '2') {
+        event.preventDefault();
+        hideAwardThumb();
+        return;
+      }
+      // ⭐ PHÍM R hoặc ArrowLeft (nút Back slide trên clicker): Quay bù (vắng mặt)
+      // Chỉ hoạt động khi popup đang mở & chưa phải tổng kết cuối
+      if (event.key === 'r' || event.key === 'R' || event.key === 'ArrowLeft') {
+        const isSummaryOpen = document.getElementById("finalScreen").classList.contains("active");
+        const finalBtn = document.getElementById("finalBtn");
+        const isFinalSummary = finalBtn && finalBtn.getAttribute("data-final") === "true";
+        if (isSummaryOpen && !isFinalSummary && currentPopupWinners && currentPopupWinners.length === 1) {
+          event.preventDefault();
+          const w = currentPopupWinners[0];
+          currentPopupWinners = null;
+          prepareRedraw(w.code, w.prize);
+          return;
+        }
+        // Nếu ArrowLeft không dùng cho quay bù thì không block các hành động khác
+        if (event.key === 'ArrowLeft') return;
+        return;
+      }
+
+      // Xử lý các phím khác (Enter, ArrowRight)
+      const allowedKeys = ["Enter", "ArrowRight"];
+      if (allowedKeys.includes(event.key)) {
+        event.preventDefault();
+        if (
+          programStarted ||
+          document.getElementById("spinBtn").innerText.includes("BẮT ĐẦU")
+        ) {
+          triggerSpinAction();
+        }
+      }
+    });
+
+    function triggerSpinAction() {
+      const isAlertOpen = document
+        .getElementById("quitAlert")
+        .classList.contains("active");
+      const isSummaryOpen = document
+        .getElementById("finalScreen")
+        .classList.contains("active");
+      const isConfirmOpen =
+        document.getElementById("confirmModal").style.display === "flex";
+      const btn = document.getElementById("spinBtn");
+      if (isConfirmOpen) return;
+      if (isSummaryOpen) {
+          // Kiểm tra xem có phải bảng tổng kết cuối không
+          const finalBtn = document.getElementById("finalBtn");
+          if (finalBtn && finalBtn.getAttribute("data-final") === "true") {
+            // Không làm gì khi bấm Enter ở bảng cuối
+            return;
+          } else {
+            handleFinalBtnClick();
+          }
+          return;
+        }
+      if (isAlertOpen) {
+        closeQuitAlert();
+        return;
+      }
+      if (btn && !btn.disabled) {
+        btn.click();
+      }
+    }
+
+    // ⭐ CHỨC NĂNG 3: HÀM PHÁO HOA VỚI THỜI GIAN TÙY CHỈNH
+    function launchCelebrationFireworks(duration = 3000) {
+      // ⭐ NGẮT PHIÊN PHÁO HOA CŨ TRƯỚC KHI BẮT ĐẦU PHIÊN MỚI
+      stopCurrentFireworks();
+
+      const canvas = document.getElementById("popupFireworks");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size bằng với popup
+      const popup = document.getElementById("finalScreen");
+      canvas.width = popup.offsetWidth;
+      canvas.height = popup.offsetHeight;
+
+      let particles = [];
+      let rockets = [];
+      let isStopped = false; // Cờ để ngắt phiên này từ bên ngoài
+
+      // Đăng ký hàm dừng cho phiên này
+      _fireworksStopFlag = function() {
+        isStopped = true;
+        clearInterval(rocketInterval);
+        isLaunching = false;
+        particles = [];
+        rockets = [];
+      };
+
+      // Class cho tên lửa pháo hoa
+      function Rocket(x, y, targetX, targetY, color) {
+        this.x = x;
+        this.y = y;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.color = color;
+        this.velocity = {
+          x: (targetX - x) / 60,
+          y: (targetY - y) / 60
+        };
+        this.trail = [];
+        this.trailLength = 15;
+        this.exploded = false;
+
+        this.update = function () {
+          if (!this.exploded) {
+            this.trail.push({ x: this.x, y: this.y });
+            if (this.trail.length > this.trailLength) {
+              this.trail.shift();
+            }
+
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+
+            // Kiểm tra đến đích
+            if (Math.abs(this.y - this.targetY) < 10) {
+              this.exploded = true;
+              createExplosion(this.targetX, this.targetY, this.color);
+            }
+          }
+        };
+
+        this.draw = function () {
+          if (!this.exploded) {
+            ctx.save();
+
+            // Vẽ vệt sáng
+            for (let i = 0; i < this.trail.length; i++) {
+              const t = this.trail[i];
+              const alpha = (i + 1) / this.trail.length;
+              ctx.globalAlpha = alpha * 0.7;
+              ctx.beginPath();
+              ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+              ctx.fillStyle = this.color;
+              ctx.fill();
+            }
+
+            // Vẽ đầu tên lửa
+            ctx.globalAlpha = 1;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+
+            ctx.restore();
+          }
+        };
+      }
+
+      // Class cho hạt pháo hoa nổ
+      function Particle(x, y, color, isStar) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.isStar = isStar; // Để tạo hình ngôi sao
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 4;
+
+        this.velocity = {
+          x: Math.cos(angle) * speed,
+          y: Math.sin(angle) * speed
+        };
+
+        this.alpha = 1;
+        this.life = 100;
+        this.gravity = 0.08;
+        this.friction = 0.98;
+        this.size = Math.random() * 3 + 2;
+
+        this.draw = function () {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+
+          if (this.isStar && this.life > 60) {
+            // Vẽ hình sao
+            this.drawStar(this.x, this.y, 5, this.size * 1.5, this.size * 0.7);
+          } else {
+            // Vẽ hình tròn
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            // Thêm ánh sáng
+            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
+            gradient.addColorStop(0, this.color);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+          }
+
+          ctx.restore();
+        };
+
+        this.drawStar = function (cx, cy, spikes, outerRadius, innerRadius) {
+          let rot = Math.PI / 2 * 3;
+          let x = cx;
+          let y = cy;
+          const step = Math.PI / spikes;
+
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - outerRadius);
+
+          for (let i = 0; i < spikes; i++) {
+            x = cx + Math.cos(rot) * outerRadius;
+            y = cy + Math.sin(rot) * outerRadius;
+            ctx.lineTo(x, y);
+            rot += step;
+
+            x = cx + Math.cos(rot) * innerRadius;
+            y = cy + Math.sin(rot) * innerRadius;
+            ctx.lineTo(x, y);
+            rot += step;
+          }
+
+          ctx.lineTo(cx, cy - outerRadius);
+          ctx.closePath();
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        };
+
+        this.update = function () {
+          this.velocity.x *= this.friction;
+          this.velocity.y *= this.friction;
+          this.velocity.y += this.gravity;
+          this.x += this.velocity.x;
+          this.y += this.velocity.y;
+          this.alpha -= 0.01;
+          this.life--;
+        };
+      }
+
+      // Tạo vụ nổ
+      function createExplosion(x, y, baseColor) {
+        const particleCount = 90;
+        const colors = [
+          baseColor,
+          '#FFD700', // vàng
+          '#FF69B4', // hồng
+          '#00FFFF', // cyan
+          '#FF6347', // đỏ cam
+          '#FFFFFF'  // trắng
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const isStar = Math.random() > 0.7; // 30% là hình sao
+          particles.push(new Particle(x, y, color, isStar));
+        }
+      }
+
+      // Bắn tên lửa
+      function launchRocket() {
+        const side = Math.random() > 0.5 ? 'left' : 'right';
+        const startX = side === 'left' ? 50 : canvas.width - 50;
+        const startY = canvas.height - 50;
+
+        const targetX = canvas.width * (0.2 + Math.random() * 0.6);
+        const targetY = canvas.height * (0.15 + Math.random() * 0.25);
+
+        const colors = ['#FF1744', '#F50057', '#D500F9', '#651FFF', '#2979FF', '#00E5FF', '#1DE9B6', '#76FF03', '#FFEA00', '#FF6D00'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        rockets.push(new Rocket(startX, startY, targetX, targetY, color));
+      }
+
+      // Bắn liên tục
+      let rocketInterval = setInterval(() => {
+        if (isStopped) return;
+        launchRocket();
+        // Thỉnh thoảng bắn 2 tên cùng lúc
+        if (Math.random() > 0.85) {
+          setTimeout(() => { if (!isStopped) launchRocket(); }, 100);
+        }
+      }, 850);
+
+      let isLaunching = true;
+
+      setTimeout(() => {
+        if (!isStopped) {
+          clearInterval(rocketInterval);
+          isLaunching = false;
+        }
+      }, duration);
+
+      function animate() {
+        // Nếu bị dừng từ bên ngoài -> thoát ngay, không requestAnimationFrame tiếp
+        if (isStopped) return;
+
+        requestAnimationFrame(animate);
+
+        // Làm mờ dần với nền ĐỎ SẪM (đồng bộ màu nền .final-screen)
+        ctx.fillStyle = "rgba(45, 0, 0, 0.12)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Vẽ và cập nhật tên lửa
+        rockets.forEach((rocket, index) => {
+          rocket.update();
+          rocket.draw();
+          if (rocket.exploded) {
+            rockets.splice(index, 1);
+          }
+        });
+
+        // Vẽ và cập nhật các hạt
+        particles.forEach((p, index) => {
+          if (p.life > 0 && p.alpha > 0) {
+            p.update();
+            p.draw();
+          } else {
+            particles.splice(index, 1);
+          }
+        });
+
+        // Khi đã ngừng bắn VÀ không còn hạt/tên lửa nào -> dừng animation và xóa canvas
+        if (!isLaunching && particles.length === 0 && rockets.length === 0) {
+          const canvas = document.getElementById('popupFireworks');
+          if (canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+          return;
+        }
+      }
+      animate();
+    }
+  </script>
+
+  <script>
+    tsParticles.load("tsparticles", {
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50, density: { enable: true, area: 800 } },
+        shape: {
+          type: "circle"
+        },
+        color: { value: ["#ff3b30", "#ffd700", "#fffae0", "#ffffff"] },
+        opacity: { value: 0.6, random: true },
+        size: { value: { min: 4, max: 15 }, random: true },
+        move: {
+          enable: true,
+          speed: 2.5,
+          direction: "top", // Hiệu ứng bong bóng nước bay lên
+          random: true,
+          straight: false,
+          outModes: { default: "out" },
+        },
+      },
+      detectRetina: true,
+    });
+  </script>
+
+  <!-- ⭐ DRAG & DROP NÚT QUAY ⭐ -->
+  <script>
+    (function () {
+      var STORAGE_KEY = 'spinBtnPos_v2';  // v2 = bỏ qua cache cũ bị hỏng
+      var wrapper = document.getElementById('spinBtnWrapper');
+      if (!wrapper) return;
+
+      // Áp tọa độ left/top (px), clamp trong viewport
+      function applyPos(left, top) {
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var w = wrapper.offsetWidth || 200, h = wrapper.offsetHeight || 220;
+        left = Math.max(0, Math.min(left, vw - w));
+        top  = Math.max(0, Math.min(top,  vh - h));
+        wrapper.style.left   = left + 'px';
+        wrapper.style.top    = top  + 'px';
+        wrapper.style.right  = 'auto';
+        wrapper.style.bottom = 'auto';
+      }
+
+      // Lưu vị trí sau khi kéo
+      function savePos() {
+        var r = wrapper.getBoundingClientRect();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ left: r.left, top: r.top }));
+      }
+
+      // Khôi phục vị trí lưu (chỉ nếu vị trí hợp lệ, nằm trong màn hình)
+      try {
+        var saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          var p = JSON.parse(saved);
+          var vw = window.innerWidth, vh = window.innerHeight;
+          // Kiểm tra vị trí có hợp lệ không (nằm trong viewport)
+          var isValid = p.left >= 0 && p.left < vw - 50 && p.top >= 0 && p.top < vh - 50;
+          if (isValid) {
+            setTimeout(function () { applyPos(p.left, p.top); }, 80);
+          } else {
+            localStorage.removeItem(STORAGE_KEY); // Xóa vị trí sai
+          }
+        }
+      } catch (e) { localStorage.removeItem(STORAGE_KEY); }
+
+      // --- Drag state ---
+      var dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+      function startDrag(cx, cy) {
+        var r = wrapper.getBoundingClientRect();
+        dragging = true;
+        startX = cx; startY = cy;
+        startLeft = r.left; startTop = r.top;
+        wrapper.classList.add('is-dragging');
+        var btn = document.getElementById('spinBtn');
+        if (btn) btn.style.pointerEvents = 'none';
+      }
+
+      function onDragMove(cx, cy) {
+        if (!dragging) return;
+        applyPos(startLeft + cx - startX, startTop + cy - startY);
+      }
+
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        wrapper.classList.remove('is-dragging');
+        var btn = document.getElementById('spinBtn');
+        if (btn) btn.style.pointerEvents = '';
+        savePos();
+      }
+
+      // Mouse – chỉ kéo khi giữ Ctrl
+      wrapper.addEventListener('mousedown', function (e) {
+        if (e.button !== 0) return;
+        if (!e.ctrlKey) return; // ⭐ Phải giữ Ctrl mới kéo được
+        if (e.target.id === 'spinBtn' || (e.target.closest && e.target.closest('#spinBtn'))) return;
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+      });
+      document.addEventListener('mousemove', function (e) { onDragMove(e.clientX, e.clientY); });
+      document.addEventListener('mouseup', endDrag);
+
+      // Đổi cursor khi giữ/thả Ctrl
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Control') wrapper.style.cursor = 'grab';
+      });
+      document.addEventListener('keyup', function (e) {
+        if (e.key === 'Control') wrapper.style.cursor = '';
+      });
+
+      // Tooltip: chỉ hiện khi hover đúng vào thanh kéo (drag-handle)
+      var handle = document.getElementById('dragHandle');
+      var tip = wrapper.querySelector('.drag-tip');
+      if (handle && tip) {
+        handle.addEventListener('mouseenter', function () { tip.style.opacity = '1'; });
+        handle.addEventListener('mouseleave', function () { tip.style.opacity = '0'; });
+      }
+
+      // Touch – chỉ kéo khi có 2 ngón (thay thế Ctrl trên mobile)
+      wrapper.addEventListener('touchstart', function (e) {
+        if (e.touches.length < 2) return; // ⭐ Phải 2 ngón mới kéo được (mobile)
+        if (e.target.id === 'spinBtn' || (e.target.closest && e.target.closest('#spinBtn'))) return;
+        var t = e.touches[0];
+        startDrag(t.clientX, t.clientY);
+      }, { passive: true });
+      document.addEventListener('touchmove', function (e) {
+        if (!dragging) return;
+        var t = e.touches[0];
+        onDragMove(t.clientX, t.clientY);
+      }, { passive: true });
+      document.addEventListener('touchend', endDrag);
+
+      // Resize – giữ nút trong viewport
+      window.addEventListener('resize', function () {
+        var r = wrapper.getBoundingClientRect();
+        applyPos(r.left, r.top);
+      });
+
+    })();
+  </script>
+
+</body>
+
+</html>

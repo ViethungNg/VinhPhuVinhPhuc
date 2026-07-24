@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <!-- Base Red Gradients -->
+    <radialGradient id="bgGrad" cx="50%" cy="95%" r="85%" fx="50%" fy="95%">
+      <stop offset="0%" stop-color="#ff3b30" />
+      <stop offset="25%" stop-color="#d32f2f" />
+      <stop offset="60%" stop-color="#7a0000" />
+      <stop offset="100%" stop-color="#330000" />
+    </radialGradient>
+    
+    <!-- Gold/Light Gradients for streaks -->
+    <linearGradient id="goldGrad1" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffeb3b" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#ff9800" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#ff3d00" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="goldGrad2" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#ff3b30" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#b71c1c" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="whiteGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Glowing filters -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="intenseGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="25" result="blur1" />
+      <feGaussianBlur stdDeviation="10" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Bottom Glowing Core -->
+  <ellipse cx="960" cy="1030" rx="400" ry="120" fill="#ffeb3b" opacity="0.25" filter="url(#intenseGlow)" />
+  <circle cx="960" cy="1050" r="150" fill="#ffffff" opacity="0.4" filter="url(#intenseGlow)" />
+
+  <!-- Left-to-Right Glowing Waves (Light Streaks) -->
+  <g filter="url(#glow)">
+    <!-- Swirl Left 1 -->
+    <path d="M -100 800 C 300 750, 700 850, 960 1050" fill="none" stroke="url(#goldGrad1)" stroke-width="4" opacity="0.75" />
+    <path d="M -100 830 C 250 800, 680 900, 960 1050" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.8" />
+
+    <!-- Swirl Left 2 (Higher) -->
+    <path d="M -100 600 C 400 550, 750 780, 960 1050" fill="none" stroke="url(#goldGrad1)" stroke-width="6" opacity="0.5" />
+    <path d="M -100 580 C 420 540, 760 760, 960 1050" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.6" />
+
+    <!-- Swirl Right 1 -->
+    <path d="M 2020 800 C 1620 750, 1220 850, 960 1050" fill="none" stroke="url(#goldGrad2)" stroke-width="4" opacity="0.75" />
+    <path d="M 2020 830 C 1670 800, 1240 900, 960 1050" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.8" />
+
+    <!-- Swirl Right 2 (Higher) -->
+    <path d="M 2020 600 C 1520 550, 1170 780, 960 1050" fill="none" stroke="url(#goldGrad2)" stroke-width="6" opacity="0.5" />
+    <path d="M 2020 580 C 1500 540, 1160 760, 960 1050" fill="none" stroke="#ffd700" stroke-width="2" opacity="0.6" />
+
+    <!-- Additional dynamic swirls -->
+    <path d="M -100 950 Q 480 820 960 1050" fill="none" stroke="url(#goldGrad1)" stroke-width="3" opacity="0.6" />
+    <path d="M 2020 950 Q 1440 820 960 1050" fill="none" stroke="url(#goldGrad2)" stroke-width="3" opacity="0.6" />
+    
+    <!-- Soft background flow lines -->
+    <path d="M -100 450 C 300 350, 800 700, 1100 1090" fill="none" stroke="#ff8a80" stroke-width="1.5" opacity="0.25" />
+    <path d="M 2020 450 C 1620 350, 1120 700, 820 1090" fill="none" stroke="#ff8a80" stroke-width="1.5" opacity="0.25" />
+  </g>
+
+  <!-- Sparkles/Glitter at the bottom core -->
+  <g opacity="0.8">
+    <circle cx="900" cy="980" r="3" fill="#ffffff" filter="url(#glow)" />
+    <circle cx="1020" cy="970" r="2.5" fill="#ffd700" filter="url(#glow)" />
+    <circle cx="850" cy="1010" r="2" fill="#ffffff" />
+    <circle cx="1080" cy="1000" r="3.5" fill="#ffeb3b" filter="url(#glow)" />
+    <circle cx="960" cy="940" r="1.5" fill="#ffffff" />
+    <circle cx="940" cy="960" r="2" fill="#ffd700" />
+    <circle cx="980" cy="975" r="3" fill="#ffffff" filter="url(#glow)" />
+    <circle cx="880" cy="1030" r="4" fill="#ffffff" opacity="0.7" filter="url(#glow)" />
+    <circle cx="1040" cy="1025" r="3" fill="#ffd700" opacity="0.7" filter="url(#glow)" />
+  </g>
+
+  <!-- Soft vignette around the screen -->
+  <rect width="1920" height="1080" fill="none" stroke="#3a0000" stroke-width="20" opacity="0.4" />
+</svg>
