@@ -41,7 +41,7 @@
     })();
   </script>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=9" />
 </head>
 
 <body>
@@ -206,7 +206,7 @@
 
     <div class="tet-panel sidebar">
       <div class="sidebar-header">
-        <h3>🏆 DANH SÁCH TRÚNG GIẢI 🏆</h3>
+        <h3>DANH SÁCH TRÚNG GIẢI</h3>
       </div>
 
       <div class="history-list" id="historyList"></div>
@@ -512,23 +512,13 @@
         const audioSpin = document.getElementById("audioSpin");
         audioSpin.play().catch(() => { });
 
-        // ⭐ PHÂN BIỆT: Giải đặc biệt vs Giải thường
-        if (prizeId === 1 || prizeId === 2) {
-          // GIẢI ĐẶC BIỆT & GIẢI NHẤT: Dùng hiệu ứng mới (quay cùng lúc, dừng lần lượt)
-          for (let j = 0; j < 3; j++) {
-            document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize');
-          }
-          await spinAllReelsSequential(chars, prizeId);
-          for (let j = 0; j < 3; j++) {
-            document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize');
-          }
-        } else {
-          // CÁC GIẢI THƯỜNG: Dùng cách quay CŨ (Promise.all)
-          await Promise.all([
-            spinReel(0, chars[0], 6000), // Cũ: 4200
-            spinReel(1, chars[1], 8000), // Cũ: 5600
-            spinReel(2, chars[2], 10000) // Cũ: 7000
-          ]);
+        // ⭐ TẤT CẢ CÁC GIẢI: Sử dụng hiệu ứng quay tít mượt mà cùng lúc, dừng lần lượt
+        for (let j = 0; j < 3; j++) {
+          document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize');
+        }
+        await spinAllReelsSequential(chars, prizeId);
+        for (let j = 0; j < 3; j++) {
+          document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize');
         }
 
         audioSpin.pause();  // ✅ Tạm dừng nhạc nền (KHÔNG reset)
@@ -568,7 +558,7 @@
     // ⭐ HÀM QUAY CŨ (CHO CÁC GIẢI THƯỜNG)
     function spinReel(index, targetChar, duration) {
       const reel = document.getElementById(`reel${index}`);
-      const stripLength = 60 + index * 10;
+      const stripLength = 100 + index * 30;
       const pool = "0123456789";
       const targetIndex = pool.indexOf(targetChar);
       let pointer =
@@ -593,74 +583,50 @@
       });
     }
 
-    // ⭐ HÀM MỚI: QUAY TẤT CẢ SLOT CÙNG LÚC, DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI (CHO GIẢI ĐẶC BIỆT)
+    // ⭐ HÀM QUAY VÀ DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI (MƯỢT TUYỆT ĐỐI KHÔNG KHỰA/NHẢY SỐ)
     async function spinAllReelsSequential(targetChars, prizeId) {
-      // Mặc định cho các giải khác nếu dùng hàm này
-      let baseSpinTime = 4000;
-      let stopDelay = 600;
-      let slowDownTime = 3000;
+      // Cấu hình thời gian cho các giải
+      let baseSpinTime = 9000;
+      let stopDelay = 1000;
+      let slowDownTime = 4000;
 
-      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp và chậm nhất (Tăng nhiều nhất)
-        baseSpinTime = 15000;
-        stopDelay = 2500;
-        slowDownTime = 8000;
-      } else if (prizeId === 2) { // GIẢI NHẤT: Chậm hơn giải thường, nhanh hơn đặc biệt
-        baseSpinTime = 10000;
+      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp nhất (quay tít 16s)
+        baseSpinTime = 16000;
         stopDelay = 1500;
-        slowDownTime = 6000;
+        slowDownTime = 5000;
+      } else if (prizeId === 2) { // GIẢI NHẤT (quay tít 12s)
+        baseSpinTime = 12000;
+        stopDelay = 1200;
+        slowDownTime = 4500;
+      } else if (prizeId === 3 || prizeId === 4) { // GIẢI NHÌ (3) & GIẢI BA (4): Tốc độ và thời gian kéo dài BẰNG NHAU (9s quay tít)
+        baseSpinTime = 9000;
+        stopDelay = 1000;
+        slowDownTime = 4000;
       }
       
-      // Bước 1: TẤT CẢ 3 SLOT BẮT ĐẦU QUAY CÙNG LÚC
+      // Bước 1: CẢ 3 SLOT BẮT ĐẦU QUAY TÍT CÙNG LÚC MÀN HÌNH MƯỢT TUYỆT ĐỐI
       for (let i = 0; i < 3; i++) {
         const reel = document.getElementById(`reel${i}`);
         const pool = "0123456789";
 
-        const stripLength = 100;
         let html = "";
-        for (let j = 0; j < stripLength; j++) {
-          const randomChar = pool.charAt(Math.floor(Math.random() * pool.length));
-          html += `<div class="reel-cell">${randomChar}</div>`;
+        for (let j = 0; j < 10; j++) {
+          html += `<div class="reel-cell">${pool[j]}</div>`;
         }
         reel.innerHTML = html;
-
         reel.style.transition = "none";
         reel.style.transform = "translateY(0)";
-        reel.offsetHeight;
-
-        const totalSpinDistance = -(stripLength * CELL_HEIGHT);
-        reel.style.transition = `transform ${baseSpinTime}ms linear`;
-        reel.style.transform = `translateY(${totalSpinDistance}px)`;
+        reel.classList.add("fast-spinning"); // CSS animation quay tít vô tận
       }
 
+      // Đợi hết thời gian 3 số cùng quay tít
       await new Promise(r => setTimeout(r, baseSpinTime));
 
-      // Bước 2: DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI
+      // Bước 2: LẦN LƯỢT CHO TỪNG SỐ CHẬM DẦN VÀ DỪNG LẠI. CÁC SỐ CÒN LẠI VẪN QUAY TÍT!
       for (let i = 0; i < 3; i++) {
         const targetChar = targetChars[i];
 
-        // Các slot sau vẫn tiếp tục quay
-        for (let j = i + 1; j < 3; j++) {
-          const reel = document.getElementById(`reel${j}`);
-          const jPool = "0123456789";
-
-          const continuedStripLength = 80;
-          let html = "";
-          for (let k = 0; k < continuedStripLength; k++) {
-            const randomChar = jPool.charAt(Math.floor(Math.random() * jPool.length));
-            html += `<div class="reel-cell">${randomChar}</div>`;
-          }
-          reel.innerHTML = html;
-
-          reel.style.transition = "none";
-          reel.style.transform = "translateY(0)";
-          reel.offsetHeight;
-
-          const continueDistance = -(continuedStripLength * CELL_HEIGHT);
-          reel.style.transition = `transform ${baseSpinTime}ms linear`;
-          reel.style.transform = `translateY(${continueDistance}px)`;
-        }
-
-        // Slot hiện tại GIẢM TỐC và DỪNG
+        // Cho slot i bắt đầu giảm tốc và dừng lại (các slot sau vẫn giữ nguyên class fast-spinning quay tít)
         await stopReelSlowly(i, targetChar, slowDownTime);
 
         const slotWindow = document.querySelector(`#reel${i}`).parentElement;
@@ -669,19 +635,24 @@
           slotWindow.classList.remove('stopping');
         }, 600);
 
+        // Chỉ sau khi slot i ĐÃ DỪNG HẲN mới chờ một chút rồi mới sang slot i+1 tiếp theo giảm tốc
         if (i < 2) {
           await new Promise(r => setTimeout(r, stopDelay));
         }
       }
     }
 
-    // ⭐ HÀM DỪNG MỘT SLOT VỚI HIỆU ỨNG GIẢM TỐC
+    // ⭐ HÀM DỪNG MỘT SLOT TỪ TỐC ĐỘ QUAY TÍT SANG GIẢM TỐC VÀ DỪNG CHÍNH XÁC
     async function stopReelSlowly(index, targetChar, slowDownTime) {
       const reel = document.getElementById(`reel${index}`);
+      
+      // 1. Gỡ bỏ CSS animation quay tít
+      reel.classList.remove("fast-spinning");
+
       const pool = "0123456789";
       const targetIndex = pool.indexOf(targetChar);
 
-      const finalStripLength = 30;
+      const finalStripLength = 40;
       let pointer = (((targetIndex - finalStripLength) % pool.length) + pool.length) % pool.length;
       let html = "";
 
@@ -695,10 +666,11 @@
       reel.innerHTML = html;
       reel.style.transition = "none";
       reel.style.transform = "translateY(0)";
-      reel.offsetHeight;
+      reel.offsetHeight; // force reflow
 
+      // 2. Chuyển sang hiệu ứng giảm tốc mượt mà (smooth cubic-bezier curve)
       const targetY = -(finalStripLength * CELL_HEIGHT);
-      reel.style.transition = `transform ${slowDownTime}ms cubic-bezier(0.05, 0.85, 0.2, 0.99)`;
+      reel.style.transition = `transform ${slowDownTime}ms cubic-bezier(0.08, 0.82, 0.17, 1)`;
       reel.style.transform = `translateY(${targetY}px)`;
 
       return new Promise(resolve => setTimeout(resolve, slowDownTime));
@@ -874,17 +846,9 @@
       const audioSpin = document.getElementById("audioSpin");
       if (audioSpin.paused) audioSpin.play().catch(() => { });
 
-      if (prizeId === 1 || prizeId === 2) {
-        for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize'); };
-        await spinAllReelsSequential(chars, prizeId);
-        for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize'); };
-      } else {
-        await Promise.all([
-          spinReel(0, chars[0], 4200),
-          spinReel(1, chars[1], 5600),
-          spinReel(2, chars[2], 7000)
-        ]);
-      }
+      for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize'); };
+      await spinAllReelsSequential(chars, prizeId);
+      for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize'); };
 
       audioSpin.pause();
       const audioWin = document.getElementById("audioWin");
@@ -1180,31 +1144,49 @@
       const body = document.getElementById('awardThumbBody');
       if (!body) return;
 
-      // Tính tổng số giải
       let totalPrizes = 0;
       Object.values(CONFIG_GIAI_THUONG).forEach(g => totalPrizes += g.count);
 
-      let html = `<div class="award-summary-total">Tổng cộng: <strong>${totalPrizes}</strong> giải thưởng</div>`;
-      html += `<div class="award-prizes-grid">`;
-
+      let html = `<div style="text-align: center;"><div class="award-summary-total">✨ TỔNG CỘNG: <strong>${totalPrizes} GIẢI THƯỞNG GIÁ TRỊ</strong> ✨</div></div>`;
+      
       const prizeEntries = Object.entries(CONFIG_GIAI_THUONG).sort((a, b) => Number(a[0]) - Number(b[0]));
-      prizeEntries.forEach(([id, prize], idx) => {
-        const isSpecial = idx === 0;
-        const imgSrc = PRIZE_IMAGES[Number(id)] || '';
+      
+      html += `<div class="award-rows-list">`;
+
+      const rowThemeClasses = {
+        1: 'theme-special',
+        2: 'theme-first',
+        3: 'theme-second',
+        4: 'theme-third'
+      };
+      const prizeIcons = {
+        1: '👑',
+        2: '🥇',
+        3: '🥈',
+        4: '🥉'
+      };
+
+      prizeEntries.forEach(([id, prize]) => {
+        const numId = Number(id);
+        const imgSrc = PRIZE_IMAGES[numId] || `img/giai${numId}.jpg`;
+        const themeClass = rowThemeClasses[numId] || 'theme-first';
+        const icon = prizeIcons[numId] || '🏆';
+
         html += `
-          <div class="award-prize-row ${isSpecial ? 'award-prize-special' : ''}">
-            <div class="award-prize-img-wrap">
-              ${imgSrc ? `<img src="${imgSrc}" alt="${prize.name}" class="award-prize-thumb" onerror="this.style.display='none'">` : '<div class="award-prize-no-img">🎁</div>'}
+          <div class="award-row-card ${themeClass}">
+            <div class="award-row-img-wrap">
+              <img src="${imgSrc}" alt="${prize.name}" class="award-row-img" onerror="if(!this.src.endsWith('.jpg')){this.src='${imgSrc.replace('.png','.jpg')}';}else{this.parentElement.style.display='none';}">
             </div>
-            <div class="award-prize-info">
-              <div class="award-prize-name">${prize.name}</div>
-              <div class="award-prize-detail">${prize.detail}</div>
+            <div class="award-row-info">
+              <div class="award-row-title">${icon} ${prize.name}</div>
+              <div class="award-row-detail">${prize.detail}</div>
             </div>
-            <div class="award-prize-count">
-              <span class="award-count-badge ${isSpecial ? 'badge-gold' : 'badge-silver'}">${prize.count} giải</span>
+            <div class="award-row-count">
+              <span class="award-count-pill">${prize.count} GIẢI</span>
             </div>
           </div>`;
       });
+
       html += `</div>`;
       body.innerHTML = html;
     }

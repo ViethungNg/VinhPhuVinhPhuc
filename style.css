@@ -303,8 +303,8 @@ body {
 #fireworks {
   position: fixed;
   top: 110px;
-  left: 18.75%;
-  width: 62.5%;
+  left: 15%;
+  width: 70%;
   height: calc(100% - 110px);
   z-index: 9999;
   pointer-events: none;
@@ -392,6 +392,11 @@ body {
   will-change: transform, filter;
 }
 
+#logoVPPhai {
+  height: 90px; /* Tăng kích thước logo Vĩnh Phú nổi bật hơn */
+  max-width: 320px;
+}
+
 .header-logo:nth-child(1), .header-logo:nth-child(4) {
   justify-self: end; /* Đẩy logo trái sát lại gần logo giữa */
 }
@@ -413,7 +418,7 @@ body {
 /* ===== MAIN CONTAINER - LAYOUT 3 MÀN HÌNH ===== */
 .container {
   display: grid;
-  grid-template-columns: 1.5fr 5fr 1.5fr;
+  grid-template-columns: 1.5fr 7fr 1.5fr; /* Tỉ lệ chuẩn 1.5m (Màn trái) : 7m (Màn chính giữa) : 1.5m (Màn phải) */
   height: calc(100vh - 110px);
   gap: 0;
   padding: 0;
@@ -767,10 +772,24 @@ body {
     0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
+@keyframes fastSpinningReel {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-1700px);
+  }
+}
+
 .reel {
   width: 100%;
   will-change: transform;
   position: relative;
+}
+
+.reel.fast-spinning {
+  animation: fastSpinningReel 0.22s linear infinite !important;
+  will-change: transform;
 }
 
 .reel-cell {
@@ -1188,8 +1207,8 @@ body {
 .modal-overlay {
   position: fixed;
   top: 0;
-  left: 18.75%;
-  width: 62.5%;
+  left: 15%;
+  width: 70%;
   height: 100%;
   background: rgba(0, 0, 0, 0.85);
   z-index: 6000;
@@ -1290,8 +1309,8 @@ body {
 .final-screen {
   position: fixed;
   top: 110px;
-  left: 18.75%;
-  width: 62.5%;
+  left: 15%;
+  width: 70%;
   height: calc(100% - 110px);
   background: rgba(45, 0, 0, 0.96);
   z-index: 5000;
@@ -1575,10 +1594,10 @@ body {
 /* ===== PARTICLES ===== */
 #tsparticles {
   position: fixed;
-  width: 62.5%;
+  width: 70%;
   height: 100%;
   top: 0;
-  left: 18.75%;
+  left: 15%;
   z-index: 1;
   pointer-events: none;
 }
@@ -1606,6 +1625,10 @@ body {
 
   .header-logo {
     height: 50px;
+  }
+  
+  #logoVPPhai {
+    height: 48px;
   }
   
   .header-logo:nth-child(2) {
@@ -1709,6 +1732,10 @@ body {
     height: 40px; /* Đồng bộ kích thước trên màn hình Điện thoại */
   }
   
+  #logoVPPhai {
+    height: 35px;
+  }
+  
   .header-logos {
     gap: 10px;
     padding: 0 10px; /* Thu gọn padding 2 bên để logo không bị ép */
@@ -1770,20 +1797,19 @@ body {
 
 .award-thumb-card {
   position: relative;
-  width: min(1200px, 95vw);
-  max-height: 92vh;
+  width: min(1300px, 94vw);
+  max-height: 94vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(160deg, rgba(80, 0, 0, 0.96) 0%, rgba(35, 0, 0, 0.99) 100%);
-  border: 3px solid rgba(255, 215, 0, 0.55);
-  border-radius: 24px;
+  background: linear-gradient(165deg, rgba(75, 0, 0, 0.95) 0%, rgba(25, 0, 0, 0.98) 100%);
+  border: 2px solid #FFD700;
+  border-radius: 28px;
   box-shadow:
-    0 0 0 1px rgba(255, 215, 0, 0.2),
-    0 40px 100px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 215, 0, 0.25);
+    0 0 50px rgba(255, 215, 0, 0.35),
+    0 30px 90px rgba(0, 0, 0, 0.85);
   overflow: hidden;
-  transform: scale(0.88) translateY(30px);
-  transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+  transform: scale(0.92) translateY(20px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .award-thumb-overlay.active .award-thumb-card {
@@ -1793,238 +1819,322 @@ body {
 /* ---- Header ---- */
 .award-thumb-header {
   position: relative;
-  padding: 28px 40px 22px;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 140, 0, 0.12) 100%);
-  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+  padding: 24px 30px 18px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(183, 28, 28, 0.4) 100%);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.4);
   text-align: center;
 }
 
 .award-thumb-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
-  font-size: 2.4rem;
-  letter-spacing: 5px;
+  font-size: 2.5rem;
+  letter-spacing: 4px;
   color: #FFD700;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.7), 0 3px 6px rgba(0,0,0,0.6);
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.7), 0 3px 6px rgba(0,0,0,0.8);
 }
 
 .award-thumb-subtitle {
-  margin-top: 8px;
-  font-size: 1.1rem;
+  margin-top: 6px;
+  font-size: 1.15rem;
   letter-spacing: 2px;
-  color: rgba(255, 248, 225, 0.75);
+  color: #FFE0B2;
   font-style: italic;
 }
 
 .award-thumb-close {
   position: absolute;
-  top: 18px;
-  right: 22px;
-  width: 46px;
-  height: 46px;
+  top: 20px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 215, 0, 0.45);
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 215, 0, 0.9);
-  font-size: 1.4rem;
+  border: 2px solid #FFD700;
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD700;
+  font-size: 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.25s ease;
 }
 
 .award-thumb-close:hover {
-  background: rgba(255, 59, 48, 0.4);
-  transform: scale(1.12);
-  color: #fff;
+  background: #FF3B30;
+  color: #FFFFFF;
+  transform: scale(1.12) rotate(90deg);
+  border-color: #FFFFFF;
 }
 
 /* ---- Body ---- */
 .award-thumb-body {
   flex: 1;
   overflow-y: auto;
-  padding: 28px 36px;
+  padding: 24px 36px 30px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 215, 0, 0.35) transparent;
 }
 
-.award-thumb-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-.award-thumb-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.award-thumb-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 215, 0, 0.35);
-  border-radius: 3px;
-}
-
-/* Tổng số giải */
 .award-summary-total {
   text-align: center;
-  font-size: 1.15rem;
-  color: rgba(255, 248, 225, 0.7);
+  font-size: 1.2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #FFD700;
   letter-spacing: 2px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
   text-transform: uppercase;
+  background: rgba(255, 215, 0, 0.1);
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  display: inline-block;
 }
 
 .award-summary-total strong {
-  color: #FFD700;
-  font-size: 1.5rem;
+  color: #FFFFFF;
+  font-size: 1.35rem;
   font-weight: 900;
 }
 
-/* Grid giải thưởng chính */
-.award-prizes-grid {
+/* LIST ROWS SHOWCASE (1 HÀNG MỖI GIẢI THƯỞNG) */
+.award-rows-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 12px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.award-prize-row {
+.award-row-card {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 24px;
+  padding: 16px 28px;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 18px 24px;
-  transition: background 0.2s;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.award-prize-row:hover {
-  background: rgba(255, 255, 255, 0.09);
+.award-row-card:hover {
+  transform: translateX(8px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
-.award-prize-special {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.16) 0%, rgba(255, 140, 0, 0.10) 100%) !important;
-  border-color: rgba(255, 215, 0, 0.4) !important;
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.12);
+/* Theme từng hàng */
+.award-row-card.theme-special {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.22) 0%, rgba(183, 28, 28, 0.35) 100%);
+  border: 2px solid #FFD700;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.25), 0 8px 24px rgba(0,0,0,0.4);
 }
 
-.award-prize-img-wrap {
-  flex-shrink: 0;
-  width: 150px;
-  height: 120px;
+.award-row-card.theme-special:hover {
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.45);
+}
+
+.award-row-card.theme-first {
+  background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(50, 10, 0, 0.5) 100%);
+  border-color: rgba(255, 149, 0, 0.5);
+}
+
+.award-row-card.theme-second {
+  background: linear-gradient(135deg, rgba(0, 230, 118, 0.15) 0%, rgba(0, 30, 15, 0.5) 100%);
+  border-color: rgba(0, 230, 118, 0.5);
+}
+
+.award-row-card.theme-third {
+  background: linear-gradient(135deg, rgba(41, 121, 255, 0.15) 0%, rgba(0, 20, 50, 0.5) 100%);
+  border-color: rgba(41, 121, 255, 0.5);
+}
+
+/* Ảnh sản phẩm */
+.award-row-img-wrap {
+  width: 140px;
+  height: 105px;
+  background: #FFFFFF;
   border-radius: 14px;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 215, 0, 0.25);
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: transform 0.3s ease;
 }
 
-.award-prize-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.35s ease;
+.theme-special .award-row-img-wrap {
+  width: 160px;
+  height: 115px;
+  border-color: #FFD700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
-.award-prize-row:hover .award-prize-thumb {
+.award-row-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.award-row-card:hover .award-row-img {
   transform: scale(1.08);
 }
 
-.award-prize-special .award-prize-img-wrap {
-  border-color: rgba(255, 215, 0, 0.6);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  width: 170px;
-  height: 136px;
-}
-
-.award-prize-no-img {
-  font-size: 3rem;
-}
-
-.award-prize-info {
+/* Thông tin giải */
+.award-row-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
 }
 
-.award-prize-name {
+.award-row-title {
   font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: 2.5px;
+  font-weight: 900;
+  font-size: 1.45rem;
+  letter-spacing: 1.5px;
   color: #FFD700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
-.award-prize-special .award-prize-name {
-  font-size: 1.6rem;
-  text-shadow: 0 0 16px rgba(255, 215, 0, 0.6);
+.theme-special .award-row-title {
+  font-size: 1.8rem;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
 }
 
-.award-prize-detail {
-  font-size: 1.05rem;
-  color: rgba(255, 248, 225, 0.78);
-  margin-top: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.award-row-detail {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.35;
 }
 
-.award-prize-count {
+/* Badge số lượng giải */
+.award-row-count {
   flex-shrink: 0;
 }
 
-.award-count-badge {
+.award-count-pill {
   display: inline-block;
   padding: 10px 24px;
   border-radius: 30px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 1.1rem;
+  font-weight: 900;
+  font-size: 1.15rem;
   letter-spacing: 1px;
   white-space: nowrap;
-}
-
-.badge-gold {
   background: linear-gradient(135deg, #FFD700, #FF9500);
-  color: #3a0000;
-  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+  color: #3A0000;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.35);
 }
 
-.badge-silver {
+.theme-first .award-count-pill {
+  background: linear-gradient(135deg, #FFB74D, #FF8F00);
+  color: #3E1800;
+}
+
+.theme-second .award-count-pill {
+  background: linear-gradient(135deg, #69F0AE, #00C853);
+  color: #003314;
+}
+
+.theme-third .award-count-pill {
+  background: linear-gradient(135deg, #82B1FF, #2979FF);
+  color: #001538;
+}
+
+.award-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.award-card-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+}
+
+.theme-first .award-card-badge { color: #FFB74D; }
+.theme-second .award-card-badge { color: #69F0AE; }
+.theme-third .award-card-badge { color: #82B1FF; }
+
+.award-card-count {
   background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
-/* Lịch trình quay – đã ẩn, giữ lại CSS phòng trường hợp dùng lại */
+.award-card-img-wrap {
+  width: 100%;
+  height: 130px;
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.3);
+}
 
-/* ---- Footer ---- */
+.award-card-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.award-sub-card:hover .award-card-img {
+  transform: scale(1.08);
+}
+
+.award-card-body {
+  width: 100%;
+}
+
+.award-card-detail {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.35;
+}
+
+/* Footer */
 .award-thumb-footer {
-  padding: 16px 36px;
-  border-top: 1.5px solid rgba(255, 215, 0, 0.2);
-  background: rgba(0, 0, 0, 0.25);
+  padding: 16px 30px;
+  border-top: 1.5px solid rgba(255, 215, 0, 0.25);
+  background: rgba(0, 0, 0, 0.35);
   text-align: center;
 }
 
 .award-thumb-hint {
-  font-size: 1rem;
-  color: rgba(255, 248, 225, 0.5);
+  font-size: 1.05rem;
+  color: rgba(255, 248, 225, 0.7);
   letter-spacing: 1px;
 }
 
 .award-thumb-hint kbd {
   display: inline-block;
-  background: rgba(255, 215, 0, 0.15);
-  border: 1.5px solid rgba(255, 215, 0, 0.4);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.1));
+  border: 1.5px solid #FFD700;
   border-radius: 6px;
   padding: 3px 12px;
-  font-weight: 700;
+  font-weight: 800;
   color: #FFD700;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-family: 'Montserrat', sans-serif;
 }
 
