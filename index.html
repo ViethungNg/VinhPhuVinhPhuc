@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
 
 <head>
@@ -63,7 +63,7 @@
       <img src="Logo/logo HV trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
       <img src="Logo/logo PMT giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
         title="Bấm để tải lại trang" onerror="this.style.display='none'" />
-      <img src="Logo/logo PD phai.png" alt="Logo Phải" class="header-logo" id="logoPDPhai" onerror="this.style.display='none'" />
+      <img src="Logo/logo VP phai.png" alt="Logo Phải" class="header-logo" id="logoVPPhai" onerror="this.style.display='none'" />
     </div>
     <div class="lantern-right">✨</div>
   </header>
@@ -194,12 +194,12 @@
 
 
       <div class="winner-info-area" id="winnerInfo">
-        <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>Vĩnh Phú</div>
+        <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>VĨNH PHÚ</div>
         <div class="winner-detail">Tri Ân Đối Tác</div>
       </div>
 
       <p class="instruction-text">
-        Hưng Yên, ngày 03 tháng 07 năm 2026
+        Phú Thọ, ngày 02 tháng 08 năm 2026
       </p>
     </div>
 
@@ -525,9 +525,9 @@
         } else {
           // CÁC GIẢI THƯỜNG: Dùng cách quay CŨ (Promise.all)
           await Promise.all([
-            spinReel(0, chars[0], 4200),
-            spinReel(1, chars[1], 5600),
-            spinReel(2, chars[2], 7000)
+            spinReel(0, chars[0], 6000), // Cũ: 4200
+            spinReel(1, chars[1], 8000), // Cũ: 5600
+            spinReel(2, chars[2], 10000) // Cũ: 7000
           ]);
         }
 
@@ -600,14 +600,14 @@
       let stopDelay = 600;
       let slowDownTime = 3000;
 
-      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp và chậm nhất
-        baseSpinTime = 7500;
-        stopDelay = 1200;
+      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp và chậm nhất (Tăng nhiều nhất)
+        baseSpinTime = 15000;
+        stopDelay = 2500;
+        slowDownTime = 8000;
+      } else if (prizeId === 2) { // GIẢI NHẤT: Chậm hơn giải thường, nhanh hơn đặc biệt
+        baseSpinTime = 10000;
+        stopDelay = 1500;
         slowDownTime = 6000;
-      } else if (prizeId === 2) { // GIẢI NHẤT: Chậm hơn giải thường, có chút hồi hộp
-        baseSpinTime = 6000;
-        stopDelay = 1000;
-        slowDownTime = 4500;
       }
       
       // Bước 1: TẤT CẢ 3 SLOT BẮT ĐẦU QUAY CÙNG LÚC
