@@ -63,7 +63,8 @@
       <img src="Logo/logo HV trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
       <img src="Logo/logo PMT giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
         title="Bấm để tải lại trang" onerror="this.style.display='none'" />
-      <img src="Logo/logo VP phai.png" alt="Logo Phải" class="header-logo" id="logoVPPhai" onerror="this.style.display='none'" />
+      <img src="Logo/logo VP phai.png" alt="Logo Phải" class="header-logo" id="logoVPPhai"
+        onerror="this.style.display='none'" />
     </div>
     <div class="lantern-right">✨</div>
   </header>
@@ -106,71 +107,81 @@
     </div>
   </div>
 
-  <div id="finalScreen" class="final-screen">
-    <canvas id="popupFireworks"></canvas>
 
-    <h1 class="final-title">
-      🏆 <span id="finalTitleText">DANH SÁCH TRÚNG GIẢI</span> 🏆
-    </h1>
-    <img id="summaryPrizeImg" src="" alt="Giải thưởng" />
-
-    <div class="final-table-container" id="finalTableContainer">
-      <table class="final-table" id="finalTable">
-        <thead>
-          <tr>
-            <th style="width: 70px">STT</th>
-            <th style="width: 220px">GIẢI</th>
-            <th style="width: 140px">MÃ QUAY</th>
-          </tr>
-        </thead>
-        <tbody id="finalTableBody"></tbody>
-      </table>
-
-      <!-- Grid 3 cột cho bảng tổng kết (sẽ được tạo động bằng JS) -->
-      <div id="threeColumnGrid" class="three-column-grid" style="display: none;"></div>
-    </div>
-
-    <div class="modal-btn-group" id="finalBtnGroup">
-      <button id="finalBtn" class="final-btn" onclick="handleFinalBtnClick()">
-        TIẾP TỤC
-      </button>
-    </div>
-    <p id="redrawHint" style="display:none; margin-top:14px; color:rgba(255,255,255,0.6); font-size:0.92rem; font-style:italic; position:relative; z-index:2; text-align:center; line-height:2;">
-      Nhấn <kbd style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:5px;padding:2px 8px;font-weight:700;color:#FFD700;">R</kbd> nếu người trúng vắng mặt để quay bù
-    </p>
-  </div>
 
   <div class="container">
     <div class="tet-panel prize-panel">
 
       <!-- View bình thường khi đang quay giải -->
-      <div id="singlePrizeView" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+      <div id="singlePrizeView"
+        style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
         <div class="prize-title-box">
           <div class="prize-name" id="displayPrizeTitle">GIẢI THƯỞNG</div>
         </div>
         <img src="" id="prizeImage" class="prize-img" alt="Hình giải thưởng" style="display: none" />
         <div id="displayPrizeDetail" class="prize-detail"></div>
-        <p id="welcomeNote" style="
-              margin-top: auto;
-              color: #ffd700;
-              opacity: 0.8;
-              font-style: italic;
-            ">
-          Hội nghị nhà phân phối Vĩnh Phú 2026
-        </p>
       </div>
 
       <!-- View tổng kết: hiển thị TẤT CẢ người trúng giải -->
-      <div id="allPrizesView" style="display: none; flex-direction: column; width: 100%; height: 100%; overflow: hidden;">
-        <div style="text-align: center; padding: 12px 5px 10px; background: linear-gradient(135deg, #5c0000, #380000); border-bottom: 2px solid rgba(255,255,255,0.25);">
-          <div style="color: #FFD700; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.15rem; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255,215,0,0.5);">🏆 TẤT CẢ GIẢI THƯỞNG 🏆</div>
+      <div id="allPrizesView"
+        style="display: none; flex-direction: column; width: 100%; height: 100%; overflow: hidden;">
+        <div
+          style="text-align: center; padding: 12px 5px 10px; background: linear-gradient(135deg, #5c0000, #380000); border-bottom: 2px solid rgba(255,255,255,0.25);">
+          <div
+            style="color: #FFD700; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.15rem; letter-spacing: 2px; text-shadow: 0 0 12px rgba(255,215,0,0.5);">
+            🏆 TẤT CẢ GIẢI THƯỞNG 🏆</div>
         </div>
-        <div id="allPrizesList" style="flex: 1; overflow-y: auto; padding: 8px 7px; display: flex; flex-direction: column; gap: 8px;"></div>
+        <div id="allPrizesList"
+          style="flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 18px;"></div>
       </div>
 
     </div>
 
     <div class="tet-panel stage-area">
+      <!-- MÀN HÌNH POPUP CHÍNH NẰM TRỌN TRONG MÀN LED CHÍNH 7x3 -->
+      <div id="finalScreen" class="final-screen">
+        <canvas id="popupFireworks"></canvas>
+
+        <h1 class="final-title">
+          🏆 <span id="finalTitleText">DANH SÁCH TRÚNG GIẢI</span> 🏆
+        </h1>
+        <img id="summaryPrizeImg" src="" alt="Giải thưởng" />
+
+        <div class="final-table-container" id="finalTableContainer">
+          <table class="final-table" id="finalTable">
+            <thead>
+              <tr>
+                <th style="width: 60px">STT</th>
+                <th style="width: 140px">GIẢI</th>
+                <th style="width: 120px">MÃ QUAY</th>
+                <th style="width: 240px">TÊN ĐẠI LÝ</th>
+              </tr>
+            </thead>
+            <tbody id="finalTableBody"></tbody>
+          </table>
+
+          <!-- Grid 3 cột cho bảng tổng kết (sẽ được tạo động bằng JS) -->
+          <div id="threeColumnGrid" class="three-column-grid" style="display: none;"></div>
+        </div>
+
+        <div class="modal-btn-group" id="finalBtnGroup">
+          <button id="finalBtn" class="final-btn" onclick="handleFinalBtnClick()">
+            TIẾP TỤC
+          </button>
+        </div>
+        <p id="redrawHint"
+          style="display:none; margin-top:14px; color:rgba(255,255,255,0.6); font-size:0.92rem; font-style:italic; position:relative; z-index:2; text-align:center; line-height:2;">
+          Nhấn <kbd
+            style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.35);border-radius:5px;padding:2px 8px;font-weight:700;color:#FFD700;">R</kbd>
+          nếu người trúng vắng mặt để quay bù
+        </p>
+      </div>
+
+      <!-- OVERLAY ẢNH TẤT CẢ GIẢI THƯỞNG (Phím 1 = hiện, Phím 2 = ẩn) - Nằm trọn trong màn LED chính 7x3 -->
+      <div id="awardThumbOverlay" class="award-thumb-overlay" onclick="hideAwardThumb()">
+        <img src="img/tatcagiaithuong.png" alt="Tất cả giải thưởng" class="award-full-img" onerror="if(this.src.endsWith('.png')){this.src='img/tatcagiaithuong.jpg';}" />
+      </div>
+
       <!-- Wrapper mới chứa slots và nút quay -->
       <div class="slots-and-button-wrapper">
         <div class="slots-wrapper">
@@ -194,8 +205,7 @@
 
 
       <div class="winner-info-area" id="winnerInfo">
-        <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>VĨNH PHÚ</div>
-        <div class="winner-detail">Tri Ân Đối Tác</div>
+        <div class="winner-name">HỘI NGHỊ KHÁCH HÀNG<br>NHÀ PHÂN PHỐI VĨNH PHÚ</div>
       </div>
 
       <p class="instruction-text">
@@ -236,22 +246,7 @@
     </button>
   </div>
 
-  <!-- ===== THUMB TỔNG QUAN GIẢI THƯỞNG (Phím 1 = hiện, Phím 2 = ẩn) ===== -->
-  <div id="awardThumbOverlay" class="award-thumb-overlay">
-    <div class="award-thumb-card">
-      <div class="award-thumb-header">
-        <div class="award-thumb-title">🏆 TỔNG QUAN GIẢI THƯỞNG 🏆</div>
-        <div class="award-thumb-subtitle">Hội Nghị Nhà Phân Phối Vĩnh Phú 2026</div>
-        <button class="award-thumb-close" onclick="hideAwardThumb()" title="Đóng (phím 2)">✕</button>
-      </div>
-      <div class="award-thumb-body" id="awardThumbBody">
-        <!-- Nội dung được tạo tự động từ JS -->
-      </div>
-      <div class="award-thumb-footer">
-        <span class="award-thumb-hint">⌨️ Phím <kbd>1</kbd> Hiện &nbsp;|&nbsp; Phím <kbd>2</kbd> Ẩn</span>
-      </div>
-    </div>
-  </div>
+
 
   <script>
     let dbEmployees = {};
@@ -306,20 +301,25 @@
 
         if (jsonData.length > 0) {
           jsonData.forEach(row => {
-            // Lấy tự động linh hoạt, tránh lỗi khoảng trắng ở file Excel
             let code = row['Mã quay thưởng'];
+            let agencyName = row['Tên đại lý'] || row['Tên Đại Lý'] || row['Ten dai ly'] || row['Ten Dai Ly'] || row['Tên đại lý / Khách hàng'] || row['Tên khách hàng'] || row['Tên'] || row['Đại lý'] || '';
 
-            if (code == null) {
-              for (let key in row) {
-                const cleanKey = key.trim().toLowerCase();
-                if (cleanKey === 'mã quay thưởng') code = row[key];
+            for (let key in row) {
+              const cleanKey = key.trim().toLowerCase();
+              if (code == null && (cleanKey.includes('mã') || cleanKey.includes('code'))) {
+                code = row[key];
+              }
+              if (!agencyName && (cleanKey.includes('tên') || cleanKey.includes('đại lý') || cleanKey.includes('dai ly') || cleanKey.includes('khách') || cleanKey.includes('đơn vị'))) {
+                agencyName = row[key];
               }
             }
 
             if (code != null) {
+              const nameStr = String(agencyName || '').trim();
               DANH_SACH_NHAN_VIEN.push({
                 code: String(code).padStart(3, '0'),
-                pos: 'Đại lý',
+                name: nameStr,
+                pos: nameStr,
                 status: 1
               });
             }
@@ -366,7 +366,8 @@
       validCodes = [];
       DANH_SACH_NHAN_VIEN.forEach((emp) => {
         dbEmployees[emp.code] = {
-          pos: emp.pos,
+          name: emp.name || emp.pos || '',
+          pos: emp.pos || emp.name || 'Đại lý',
           status: emp.status,
           originalIndex: emp.originalIndex,
         };
@@ -381,18 +382,20 @@
     }
 
     function setupIntroUI() {
-        document.getElementById("singlePrizeView").style.display = "flex";
-        document.getElementById("allPrizesView").style.display = "none";
+      document.getElementById("singlePrizeView").style.display = "flex";
+      document.getElementById("allPrizesView").style.display = "none";
 
       document.getElementById("displayPrizeTitle").innerText = "GIẢI THƯỞNG";
       document.getElementById("displayPrizeDetail").innerText = "";
       document.getElementById("prizeImage").style.display = "none";
       document.getElementById("spinBtn").innerText = "BẮT ĐẦU CHƯƠNG TRÌNH";
 
-      document.getElementById("winnerInfo").innerHTML = `
-                <div class="winner-name">HỘI NGHỊ NHÀ PHÂN PHỐI<br>Vĩnh Phú</div>
-                <div class="winner-detail" style="background:none; border:none; box-shadow:none; padding:0; color: var(--tet-gold); opacity: 0.9; font-size: 2rem;"></div>
-            `;
+      const currentWinnerInfo = document.getElementById("winnerInfo");
+      if (currentWinnerInfo && !currentWinnerInfo.innerHTML.includes("HỘI NGHỊ KHÁCH HÀNG")) {
+        currentWinnerInfo.innerHTML = `
+          <div class="winner-name">HỘI NGHỊ KHÁCH HÀNG<br>NHÀ PHÂN PHỐI VĨNH PHÚ</div>
+        `;
+      }
 
       programStarted = false;
       currentBatchIndex = 0;
@@ -484,7 +487,8 @@
         batchWinners.push({
           prize: batchData.prizeId,
           code: selectedCandidate,
-          pos: emp.pos,
+          name: emp ? (emp.name || emp.pos || '') : '',
+          pos: emp ? (emp.pos || 'Đại lý') : 'Đại lý',
         });
 
         usedCodes.push(selectedCandidate);
@@ -512,14 +516,7 @@
         const audioSpin = document.getElementById("audioSpin");
         audioSpin.play().catch(() => { });
 
-        // ⭐ TẤT CẢ CÁC GIẢI: Sử dụng hiệu ứng quay tít mượt mà cùng lúc, dừng lần lượt
-        for (let j = 0; j < 3; j++) {
-          document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize');
-        }
         await spinAllReelsSequential(chars, prizeId);
-        for (let j = 0; j < 3; j++) {
-          document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize');
-        }
 
         audioSpin.pause();  // ✅ Tạm dừng nhạc nền (KHÔNG reset)
         const audioWin = document.getElementById("audioWin");
@@ -531,9 +528,12 @@
           audioSpin.play().catch(() => { });
         };
 
+        const agencyName = winner.name || winner.pos || '';
+        const nameHtml = agencyName ? `<div class="winner-detail" style="font-size: 2.8rem; color: #ffffff; font-weight: 900; text-shadow: 0 4px 16px rgba(0,0,0,0.8); margin-top: 10px;">${agencyName}</div>` : '';
         document.getElementById("winnerInfo").innerHTML = `
-                    <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">${winner.code}</div>
-                `;
+            <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">Mã: ${winner.code}</div>
+            ${nameHtml}
+        `;
 
         allWinners.push(winner);
         renderHistory();
@@ -583,27 +583,40 @@
       });
     }
 
+    // ⭐ HÀM CẤU HÌNH THỜI GIAN QUAY RIÊNG BỆT CHO TỪNG GIẢI
+    // Bạn có thể chủ động điều chỉnh riêng thời gian (ms) cho từng giải tại đây:
+    function getPrizeSpinConfig(prizeId) {
+      const configs = {
+        // --- GIẢI NHẤT (prizeId = 2) ---
+        2: {
+          baseSpinTime: 12000,  // Thời gian 3 ô cùng quay tít liên tục (12 giây)
+          stopDelay: 1200,      // Độ trễ chờ giữa 2 ô số dừng kế tiếp (1.2 giây)
+          slowDownTime: 7000    // Thời gian hãm phanh giảm tốc từng ô số (4.5 giây)
+        },
+
+        // --- GIẢI NHÌ (prizeId = 3) ---
+        3: {
+          baseSpinTime: 10000,   // Thời gian 3 ô cùng quay tít liên tục (10 giây)
+          stopDelay: 1700,      // Độ trễ chờ giữa 2 ô số dừng kế tiếp (1.7 giây)
+          slowDownTime: 6000    // Thời gian hãm phanh giảm tốc từng ô số (4.0 giây)
+        },
+
+        // --- GIẢI BA (prizeId = 4) ---
+        4: {
+          baseSpinTime: 8000,   // Thời gian 3 ô cùng quay tít liên tục (8 giây)
+          stopDelay: 1500,      // Độ trễ chờ giữa 2 ô số dừng kế tiếp (1.5 giây)
+          slowDownTime: 5000    // Thời gian hãm phanh giảm tốc từng ô số (4.0 giây)
+        }
+      };
+
+      return configs[prizeId] || { baseSpinTime: 9000, stopDelay: 1000, slowDownTime: 4000 };
+    }
+
     // ⭐ HÀM QUAY VÀ DỪNG LẦN LƯỢT TỪ TRÁI SANG PHẢI (MƯỢT TUYỆT ĐỐI KHÔNG KHỰA/NHẢY SỐ)
     async function spinAllReelsSequential(targetChars, prizeId) {
-      // Cấu hình thời gian cho các giải
-      let baseSpinTime = 9000;
-      let stopDelay = 1000;
-      let slowDownTime = 4000;
+      // Lấy cấu hình thời gian riêng biệt cho giải hiện tại từ hàm getPrizeSpinConfig
+      const { baseSpinTime, stopDelay, slowDownTime } = getPrizeSpinConfig(prizeId);
 
-      if (prizeId === 1) { // GIẢI ĐẶC BIỆT: Hồi hộp nhất (quay tít 16s)
-        baseSpinTime = 16000;
-        stopDelay = 1500;
-        slowDownTime = 5000;
-      } else if (prizeId === 2) { // GIẢI NHẤT (quay tít 12s)
-        baseSpinTime = 12000;
-        stopDelay = 1200;
-        slowDownTime = 4500;
-      } else if (prizeId === 3 || prizeId === 4) { // GIẢI NHÌ (3) & GIẢI BA (4): Tốc độ và thời gian kéo dài BẰNG NHAU (9s quay tít)
-        baseSpinTime = 9000;
-        stopDelay = 1000;
-        slowDownTime = 4000;
-      }
-      
       // Bước 1: CẢ 3 SLOT BẮT ĐẦU QUAY TÍT CÙNG LÚC MÀN HÌNH MƯỢT TUYỆT ĐỐI
       for (let i = 0; i < 3; i++) {
         const reel = document.getElementById(`reel${i}`);
@@ -645,7 +658,7 @@
     // ⭐ HÀM DỪNG MỘT SLOT TỪ TỐC ĐỘ QUAY TÍT SANG GIẢM TỐC VÀ DỪNG CHÍNH XÁC
     async function stopReelSlowly(index, targetChar, slowDownTime) {
       const reel = document.getElementById(`reel${index}`);
-      
+
       // 1. Gỡ bỏ CSS animation quay tít
       reel.classList.remove("fast-spinning");
 
@@ -719,18 +732,12 @@
       const redrawHint = document.getElementById("redrawHint");
       if (redrawHint) redrawHint.style.display = "none";
 
-      if (winnersList.length === 1) {
-        const w = winnersList[0];
-        const pName = CONFIG_GIAI_THUONG[w.prize].name;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>1</td><td>${pName}</td><td>${w.code}</td>`;
-        tbody.appendChild(tr);
-      }
-      else if (winnersList.length > 1 && winnersList.length <= 10) {
+      if (winnersList.length > 0) {
         winnersList.forEach((w, index) => {
           const pName = CONFIG_GIAI_THUONG[w.prize].name;
+          const agencyName = w.name || w.pos || '';
           const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${index + 1}</td><td>${pName}</td><td>${w.code}</td>`;
+          tr.innerHTML = `<td>${index + 1}</td><td>${pName}</td><td style="font-weight:800; color:var(--tet-red-deep);">Mã: ${w.code}</td><td style="font-weight:700; color:#1e293b;">${agencyName}</td>`;
           tbody.appendChild(tr);
         });
       }
@@ -748,14 +755,16 @@
       for (let i = allWinners.length - 1; i >= 0; i--) {
         const w = allWinners[i];
         const pName = CONFIG_GIAI_THUONG[w.prize].name;
+        const agencyName = w.name || w.pos || '';
         const item = document.createElement("div");
         item.className = "history-item";
         item.innerHTML = `
             <div class="h-info">
-              <div class="h-name" style="font-size: 1.6rem; color: var(--tet-red-deep);">Mã: ${w.code}</div>
+              <div class="h-name" style="font-size: 1.55rem; color: var(--tet-red-deep); font-weight:800;">Mã: ${w.code}</div>
+              ${agencyName ? `<div style="font-size: 1.25rem; color: #1e293b; font-weight: 800; margin-top: 4px; line-height: 1.3;">${agencyName}</div>` : ''}
             </div>
             <div style="text-align: right;">
-              <span class="h-badge">${pName}</span><br>
+              <span class="h-badge">${pName}</span>
             </div>
           `;
         list.appendChild(item);
@@ -846,9 +855,7 @@
       const audioSpin = document.getElementById("audioSpin");
       if (audioSpin.paused) audioSpin.play().catch(() => { });
 
-      for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.add('special-prize'); };
       await spinAllReelsSequential(chars, prizeId);
-      for (let j = 0; j < 3; j++) { document.querySelector(`#reel${j}`).parentElement.classList.remove('special-prize'); };
 
       audioSpin.pause();
       const audioWin = document.getElementById("audioWin");
@@ -858,8 +865,11 @@
         audioSpin.play().catch(() => { });
       };
 
+      const redrawAgencyName = newWinner.name || newWinner.pos || '';
+      const redrawNameHtml = redrawAgencyName ? `<div class="winner-detail" style="font-size: 2.8rem; color: #ffffff; font-weight: 900; text-shadow: 0 4px 16px rgba(0,0,0,0.8); margin-top: 10px;">${redrawAgencyName}</div>` : '';
       document.getElementById("winnerInfo").innerHTML = `
-            <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">${newWinner.code}</div>
+            <div class="winner-name" style="color:#FFD700; font-size: 5rem; white-space: nowrap; max-width: 100%; width: 100%;">Mã: ${newWinner.code}</div>
+            ${redrawNameHtml}
         `;
 
       allWinners.push(newWinner);
@@ -929,7 +939,7 @@
 
       document.getElementById("finalBtn").setAttribute("data-final", "true");
 
-      // Sắp xếp theo giải (ưu tiên giải đặc biệt lên đầu)
+      // Sắp xếp theo giải (ưu tiên Giải Nhất lên đầu)
       const sortedWinners = [...allWinners].sort((a, b) => a.prize - b.prize);
 
       // Dùng layout 4 cột - mỗi cột là 1 loại giải
@@ -939,43 +949,63 @@
       threeColGrid.innerHTML = "";
 
       // Phân nhóm winners theo prizeId
-      const prizeGroups = { 1: [], 2: [], 3: [], 4: [] };
+      const prizeGroups = { 2: [], 3: [], 4: [] };
       sortedWinners.forEach(w => {
         if (prizeGroups[w.prize]) prizeGroups[w.prize].push(w);
       });
 
-      // Danh sách 4 cột theo thứ tự: Đặc Biệt, Nhất, Nhì, Ba
-      const prizeOrder = [1, 2, 3, 4];
       let globalIndex = 0;
+      function createPyramidWinnerCard(w, idx) {
+        const pName = CONFIG_GIAI_THUONG[w.prize].name;
+        const colorClass = getPrizeColorClass(w.prize);
+        const agencyName = w.name || w.pos || '';
+        const card = document.createElement("div");
+        card.className = `winner-card card-prize-level-${w.prize}`;
+        card.style.animationDelay = `${(idx - 1) * 0.08}s`;
 
-      prizeOrder.forEach(prizeId => {
-        const col = document.createElement("div");
-        col.className = "column-wrapper";
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="card-prize ${colorClass}">${pName}</span>
+          </div>
+          <div class="card-body" style="text-align: center;">
+            <div class="card-name" style="text-align: center; margin-top: 6px; font-size: 1.65rem; color: #FFD700; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">Mã: ${w.code}</div>
+            ${agencyName ? `<div style="font-size: 1.25rem; color: #ffffff; font-weight: 800; margin-top: 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.8);">${agencyName}</div>` : ''}
+          </div>
+        `;
+        return card;
+      }
 
-        const winners = prizeGroups[prizeId] || [];
-        winners.forEach(w => {
-          const pName = CONFIG_GIAI_THUONG[w.prize].name;
-          const colorClass = getPrizeColorClass(w.prize);
-          globalIndex++;
+      const pyramidContainer = document.createElement("div");
+      pyramidContainer.className = "pyramid-layout-container";
 
-          const card = document.createElement("div");
-          card.className = "winner-card";
-          card.style.animationDelay = `${(globalIndex - 1) * 0.08}s`;
-
-          card.innerHTML = `
-            <div class="card-header">
-              <span class="card-number">${globalIndex}</span>
-              <span class="card-prize ${colorClass}">${pName}</span>
-            </div>
-            <div class="card-body">
-              <div class="card-name" style="text-align: center; margin-top: 12px; font-size: 1.8rem; color: var(--tet-red-deep);">Mã: ${w.code}</div>
-            </div>
-          `;
-          col.appendChild(card);
-        });
-
-        threeColGrid.appendChild(col);
+      // 1. Dòng 1: GIẢI NHẤT (trên cùng - 1 thẻ ở giữa)
+      const firstRow = document.createElement("div");
+      firstRow.className = "pyramid-row row-first";
+      (prizeGroups[2] || []).forEach(w => {
+        globalIndex++;
+        firstRow.appendChild(createPyramidWinnerCard(w, globalIndex));
       });
+      pyramidContainer.appendChild(firstRow);
+
+      // 2. Dòng 2: GIẢI NHÌ (ở giữa - 2 thẻ song song)
+      const secondRow = document.createElement("div");
+      secondRow.className = "pyramid-row row-second";
+      (prizeGroups[3] || []).forEach(w => {
+        globalIndex++;
+        secondRow.appendChild(createPyramidWinnerCard(w, globalIndex));
+      });
+      pyramidContainer.appendChild(secondRow);
+
+      // 3. Dòng 3: GIẢI BA (dưới cùng - 5 thẻ dàn ngang)
+      const thirdRow = document.createElement("div");
+      thirdRow.className = "pyramid-row row-third";
+      (prizeGroups[4] || []).forEach(w => {
+        globalIndex++;
+        thirdRow.appendChild(createPyramidWinnerCard(w, globalIndex));
+      });
+      pyramidContainer.appendChild(thirdRow);
+
+      threeColGrid.appendChild(pyramidContainer);
 
       modal.classList.add("active");
 
@@ -986,12 +1016,12 @@
         // Hiển thị tất cả người trúng giải bên màn hình trái
         document.getElementById("singlePrizeView").style.display = "none";
         document.getElementById("allPrizesView").style.display = "flex";
-        
+
         const allPrizesList = document.getElementById("allPrizesList");
         allPrizesList.innerHTML = "";
-        
-        // Chỉ hiển thị các giải: Đặc biệt(1), Nhất(2), Nhì(3), Ba(4)
-        const displayPrizeIds = [1, 2, 3, 4];
+
+        // Chỉ hiển thị các giải: Nhất(2), Nhì(3), Ba(4)
+        const displayPrizeIds = [2, 3, 4];
         displayPrizeIds.forEach(prizeId => {
           if (!CONFIG_GIAI_THUONG[prizeId]) return;
           const prize = CONFIG_GIAI_THUONG[prizeId];
@@ -1006,8 +1036,8 @@
               <span class="card-prize ${colorClass} apc-prize-name">${prize.name}</span>
             </div>
             <div class="apc-img-wrap">
-              <img class="apc-img" src="img/giai${prizeId}.png"
-                onerror="if(!this.src.endsWith('.jpg')){this.src='img/giai${prizeId}.jpg';}else{this.parentElement.style.display='none';}"
+              <img class="apc-img" src="${prize.img || PRIZE_IMAGES[prizeId] || `img/giai${prizeId}.png`}"
+                onerror="if(this.src.endsWith('.png')){this.src=this.src.replace('.png','.jpg');}else if(this.src.endsWith('.jpg')){this.src=this.src.replace('.jpg','.png');}else{this.parentElement.style.display='none';}"
                 alt="${prize.name}" />
             </div>
             <div class="apc-detail">${prize.detail}</div>
@@ -1131,68 +1161,7 @@
       closeConfirmModal();
     }
 
-    // ===== THUMB TỔNG QUAN GIẢI THƯỞNG =====
-    // Mapping prizeId -> đường dẫn ảnh
-    const PRIZE_IMAGES = {
-      1: 'img/giai1.png',
-      2: 'img/giai2.jpg',
-      3: 'img/giai3.jpg',
-      4: 'img/giai4.png'
-    };
-
-    function buildAwardThumb() {
-      const body = document.getElementById('awardThumbBody');
-      if (!body) return;
-
-      let totalPrizes = 0;
-      Object.values(CONFIG_GIAI_THUONG).forEach(g => totalPrizes += g.count);
-
-      let html = `<div style="text-align: center;"><div class="award-summary-total">✨ TỔNG CỘNG: <strong>${totalPrizes} GIẢI THƯỞNG GIÁ TRỊ</strong> ✨</div></div>`;
-      
-      const prizeEntries = Object.entries(CONFIG_GIAI_THUONG).sort((a, b) => Number(a[0]) - Number(b[0]));
-      
-      html += `<div class="award-rows-list">`;
-
-      const rowThemeClasses = {
-        1: 'theme-special',
-        2: 'theme-first',
-        3: 'theme-second',
-        4: 'theme-third'
-      };
-      const prizeIcons = {
-        1: '👑',
-        2: '🥇',
-        3: '🥈',
-        4: '🥉'
-      };
-
-      prizeEntries.forEach(([id, prize]) => {
-        const numId = Number(id);
-        const imgSrc = PRIZE_IMAGES[numId] || `img/giai${numId}.jpg`;
-        const themeClass = rowThemeClasses[numId] || 'theme-first';
-        const icon = prizeIcons[numId] || '🏆';
-
-        html += `
-          <div class="award-row-card ${themeClass}">
-            <div class="award-row-img-wrap">
-              <img src="${imgSrc}" alt="${prize.name}" class="award-row-img" onerror="if(!this.src.endsWith('.jpg')){this.src='${imgSrc.replace('.png','.jpg')}';}else{this.parentElement.style.display='none';}">
-            </div>
-            <div class="award-row-info">
-              <div class="award-row-title">${icon} ${prize.name}</div>
-              <div class="award-row-detail">${prize.detail}</div>
-            </div>
-            <div class="award-row-count">
-              <span class="award-count-pill">${prize.count} GIẢI</span>
-            </div>
-          </div>`;
-      });
-
-      html += `</div>`;
-      body.innerHTML = html;
-    }
-
     function showAwardThumb() {
-      buildAwardThumb();
       const overlay = document.getElementById('awardThumbOverlay');
       if (overlay) overlay.classList.add('active');
     }
@@ -1259,16 +1228,16 @@
       const btn = document.getElementById("spinBtn");
       if (isConfirmOpen) return;
       if (isSummaryOpen) {
-          // Kiểm tra xem có phải bảng tổng kết cuối không
-          const finalBtn = document.getElementById("finalBtn");
-          if (finalBtn && finalBtn.getAttribute("data-final") === "true") {
-            // Không làm gì khi bấm Enter ở bảng cuối
-            return;
-          } else {
-            handleFinalBtnClick();
-          }
+        // Kiểm tra xem có phải bảng tổng kết cuối không
+        const finalBtn = document.getElementById("finalBtn");
+        if (finalBtn && finalBtn.getAttribute("data-final") === "true") {
+          // Không làm gì khi bấm Enter ở bảng cuối
           return;
+        } else {
+          handleFinalBtnClick();
         }
+        return;
+      }
       if (isAlertOpen) {
         closeQuitAlert();
         return;
@@ -1296,7 +1265,7 @@
       let isStopped = false; // Cờ để ngắt phiên này từ bên ngoài
 
       // Đăng ký hàm dừng cho phiên này
-      _fireworksStopFlag = function() {
+      _fireworksStopFlag = function () {
         isStopped = true;
         clearInterval(rocketInterval);
         isLaunching = false;
@@ -1580,10 +1549,10 @@
         var vw = window.innerWidth, vh = window.innerHeight;
         var w = wrapper.offsetWidth || 200, h = wrapper.offsetHeight || 220;
         left = Math.max(0, Math.min(left, vw - w));
-        top  = Math.max(0, Math.min(top,  vh - h));
-        wrapper.style.left   = left + 'px';
-        wrapper.style.top    = top  + 'px';
-        wrapper.style.right  = 'auto';
+        top = Math.max(0, Math.min(top, vh - h));
+        wrapper.style.left = left + 'px';
+        wrapper.style.top = top + 'px';
+        wrapper.style.right = 'auto';
         wrapper.style.bottom = 'auto';
       }
 

@@ -2,25 +2,20 @@
 // Định dạng: Giải: Số lượng
 
 const CONFIG_GIAI_THUONG = {
-    1: { name: "GIẢI ĐẶC BIỆT", detail: "Điều hòa Casper 9000 BTU", count: 1 },
-    2: { name: "GIẢI NHẤT", detail: "Cây nước nóng lạnh Kangaroo KG699A3", count: 1 },
-    3: { name: "GIẢI NHÌ", detail: "Máy hàn ống nhiệt rơ le ROWELD P 63 S-6", count: 1 },
-    4: { name: "GIẢI BA", detail: "Bình nóng lạnh Ariston 15L Vitaly", count: 2 }
+    2: { name: "GIẢI NHẤT", detail: "Điều hòa Casper 9000 BTU", count: 1, img: "img/giai2.png" },
+    3: { name: "GIẢI NHÌ", detail: "Xe Đạp thể thao", count: 2, img: "img/giai3.png" },
+    4: { name: "GIẢI BA", detail: "Máy hàn Ống nhiệt 800W", count: 5, img: "img/giai4.png" }
     // ... các giải khác
 };
 const KICH_BAN_QUAY = [
-    // --- GIẢI BA (Tổng 2 giải - Chia 2 phiên cho 2 người bấm quay) ---
-    { prizeId: 4, count: 1, label: "GIẢI BA", presenter: "Mr Long" },
-    { prizeId: 4, count: 1, label: "GIẢI BA", presenter: "Mr Kế" },
+    // --- GIẢI BA (5 giải trong 1 lần bấm quay) ---
+    { prizeId: 4, count: 5, label: "GIẢI BA", presenter: "Mr Long & Mr Kế" },
 
-    // --- GIẢI NHÌ (1 giải) ---
-    { prizeId: 3, count: 1, label: "GIẢI NHÌ", presenter: "Mr Thành Nam" },
+    // --- GIẢI NHÌ (2 giải trong 1 lần bấm quay) ---
+    { prizeId: 3, count: 2, label: "GIẢI NHÌ", presenter: "Mr Thành Nam" },
 
-    // --- GIẢI NHẤT (1 giải) ---
-    { prizeId: 2, count: 1, label: "GIẢI NHẤT", presenter: "Mr Trường" },
-
-    // --- GIẢI ĐẶC BIỆT (1 giải) ---
-    { prizeId: 1, count: 1, label: "GIẢI ĐẶC BIỆT", presenter: "Ms Dung" }
+    // --- GIẢI NHẤT (1 giải trong 1 lần bấm quay) ---
+    { prizeId: 2, count: 1, label: "GIẢI NHẤT", presenter: "Mr Trường" }
 ];
 
 
