@@ -208,7 +208,7 @@
         <div class="winner-name">HỘI NGHỊ KHÁCH HÀNG<br>NHÀ PHÂN PHỐI VĨNH PHÚ</div>
       </div>
 
-      <p class="instruction-text">
+      <p class="instruction-text" id="introDate">
         Phú Thọ, ngày 02 tháng 08 năm 2026
       </p>
     </div>
@@ -397,11 +397,17 @@
         `;
       }
 
+      const introDate = document.getElementById("introDate");
+      if (introDate) introDate.style.display = "block";
+
       programStarted = false;
       currentBatchIndex = 0;
     }
 
     function updateUIForNextBatch() {
+      const introDate = document.getElementById("introDate");
+      if (introDate) introDate.style.display = "none";
+
       if (currentBatchIndex < KICH_BAN_QUAY.length) {
         const batchData = KICH_BAN_QUAY[currentBatchIndex];
         const prizeInfo = CONFIG_GIAI_THUONG[batchData.prizeId];
@@ -596,14 +602,14 @@
 
         // --- GIẢI NHÌ (prizeId = 3) ---
         3: {
-          baseSpinTime: 10000,   // Thời gian 3 ô cùng quay tít liên tục (10 giây)
+          baseSpinTime: 9000,   // Thời gian 3 ô cùng quay tít liên tục (10 giây)
           stopDelay: 1700,      // Độ trễ chờ giữa 2 ô số dừng kế tiếp (1.7 giây)
           slowDownTime: 6000    // Thời gian hãm phanh giảm tốc từng ô số (4.0 giây)
         },
 
         // --- GIẢI BA (prizeId = 4) ---
         4: {
-          baseSpinTime: 8000,   // Thời gian 3 ô cùng quay tít liên tục (8 giây)
+          baseSpinTime: 7000,   // Thời gian 3 ô cùng quay tít liên tục (8 giây)
           stopDelay: 1500,      // Độ trễ chờ giữa 2 ô số dừng kế tiếp (1.5 giây)
           slowDownTime: 5000    // Thời gian hãm phanh giảm tốc từng ô số (4.0 giây)
         }
