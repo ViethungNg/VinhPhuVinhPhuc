@@ -8,6 +8,9 @@
 
   <script src="data.js"></script>
 
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -42,6 +45,409 @@
   </script>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="style.css?v=10" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* --- CSS GOOGLE SANS & MODAL QUẢN LÝ DATABASE SUPABASE (FULL STAGE & CENTER POPUPS) --- */
+    .db-stage-modal, .db-submodal-overlay {
+      font-family: 'Google Sans', 'Google Sans Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    .db-stage-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 150;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    .db-modal-box {
+      font-family: 'Google Sans', 'Google Sans Flex', sans-serif !important;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      color: #0f172a;
+      overflow: hidden;
+      animation: dbModalPop 0.2s ease-out;
+    }
+
+    @keyframes dbModalPop {
+      from { transform: scale(0.97); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .db-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      background: #0f172a;
+      border-bottom: 2px solid #334155;
+    }
+
+    .db-modal-header h3 {
+      font-family: 'Google Sans', sans-serif !important;
+      margin: 0;
+      color: #f8fafc;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .db-close-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 2.2rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s, transform 0.1s;
+    }
+    .db-close-btn:hover {
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .db-modal-body {
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+      flex: 1;
+      background: #ffffff;
+    }
+
+    .db-action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 14px 20px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .db-search-input {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px 16px;
+      color: #0f172a;
+      font-size: 1rem;
+      height: 44px;
+      font-family: 'Google Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-sizing: border-box;
+    }
+    .db-search-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+
+    .btn-download-template {
+      background: #475569;
+      color: #ffffff;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 6px;
+      padding: 0 18px;
+      height: 44px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-download-template:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+
+    .btn-import-excel {
+      background: #0284c7;
+      color: #ffffff;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 6px;
+      padding: 0 20px;
+      height: 44px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-import-excel:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    .btn-open-add-modal {
+      background: #10b981;
+      color: #ffffff;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 6px;
+      padding: 0 20px;
+      height: 44px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-open-add-modal:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .db-total-count {
+      font-size: 0.95rem;
+      color: #1e293b;
+      white-space: nowrap;
+      font-weight: 700;
+      background: #ffffff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .db-table-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .db-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+      font-family: 'Google Sans', sans-serif;
+    }
+    .db-table th {
+      position: sticky;
+      top: 0;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      padding: 12px 18px;
+      text-align: left;
+      border-bottom: 2px solid #cbd5e1;
+      z-index: 1;
+    }
+    .db-table td {
+      padding: 12px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #0f172a;
+    }
+    .db-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .db-table tr:hover {
+      background: #e2e8f0;
+    }
+
+    .db-code-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      font-weight: 700;
+      font-family: 'Google Sans', monospace;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 1.05rem;
+    }
+
+    .btn-db-edit, .btn-db-delete {
+      padding: 7px 16px;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: 'Google Sans', sans-serif;
+      cursor: pointer;
+      margin: 0 3px;
+      transition: background 0.2s;
+    }
+    .btn-db-edit {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-db-edit:hover {
+      background: #0369a1;
+    }
+    .btn-db-delete {
+      background: #ef4444;
+      color: #ffffff;
+    }
+    .btn-db-delete:hover {
+      background: #dc2626;
+    }
+
+    /* --- SUB-MODALS CĂN GIỮA MÀN HÌNH CHO THÊM / SỬA / XÓA --- */
+    .db-submodal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 300;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .db-submodal-box {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: dbModalPop 0.22s ease-out;
+      border: 1px solid #cbd5e1;
+      font-family: 'Google Sans', sans-serif !important;
+    }
+
+    .db-submodal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .db-submodal-header h4 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      font-family: 'Google Sans', sans-serif !important;
+    }
+
+    .db-delete-header {
+      background: #991b1b !important;
+    }
+
+    .db-submodal-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .db-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .db-form-group label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #334155;
+    }
+    .db-form-group input {
+      height: 46px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 1.05rem;
+      font-family: 'Google Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .db-form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+
+    .db-submodal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-submodal-cancel {
+      background: #e2e8f0;
+      color: #334155;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      padding: 11px 22px;
+      cursor: pointer;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-submodal-cancel:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-submodal-save {
+      background: #2563eb;
+      color: #ffffff;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      padding: 11px 24px;
+      cursor: pointer;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-submodal-save:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-submodal-delete {
+      background: #dc2626;
+      color: #ffffff;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      padding: 11px 24px;
+      cursor: pointer;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-submodal-delete:hover {
+      background: #b91c1c;
+    }
+  </style>
 </head>
 
 <body>
@@ -103,7 +509,8 @@
     </div>
   </div>
 
-
+    </div>
+  </div>
 
   <div class="container">
     <div class="tet-panel prize-panel">
@@ -135,6 +542,88 @@
     </div>
 
     <div class="tet-panel stage-area">
+      <!-- Modal Quản Lý Database (Supabase - Trải rộng 100% Màn LED chính giữa) -->
+      <div id="dbManagementModal" class="db-stage-modal" style="display: none;">
+        <div class="db-modal-box">
+          <div class="db-modal-header">
+            <h3>Quản Lý Dữ Liệu Khách Mời (Supabase)</h3>
+            <button class="db-close-btn" onclick="closeDatabaseModal()">&times;</button>
+          </div>
+          
+          <div class="db-modal-body">
+            <!-- Thanh Công Cụ & Tìm Kiếm -->
+            <div class="db-action-bar">
+              <input type="text" id="dbSearchInput" class="db-search-input" placeholder="Tìm kiếm theo Mã quay hoặc Tên đại lý..." oninput="renderDatabaseTable()" />
+              <span id="dbTotalCount" class="db-total-count">Tổng số: 0 khách</span>
+              <button class="btn-download-template" onclick="downloadExcelTemplate()">Tải file mẫu Excel</button>
+              <button class="btn-import-excel" onclick="triggerExcelImport()">Nhập từ Excel</button>
+              <button class="btn-open-add-modal" onclick="openFormModalForAdd()">Thêm khách hàng</button>
+              <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelImport(event)" />
+            </div>
+
+            <!-- Bảng Dữ Liệu -->
+            <div class="db-table-wrapper">
+              <table class="db-table">
+                <thead>
+                  <tr>
+                    <th style="width: 70px;">ID</th>
+                    <th style="width: 140px;">Mã Quay</th>
+                    <th>Tên Đại Lý / Khách Hàng</th>
+                    <th style="width: 180px; text-align: center;">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="dbTableBody">
+                  <!-- Render động bằng JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Modal Thêm / Chỉnh Sửa Khách Hàng (Popup ở giữa màn hình) -->
+      <div id="dbFormModal" class="db-submodal-overlay" style="display: none;">
+        <div class="db-submodal-box">
+          <div class="db-submodal-header">
+            <h4 id="dbFormTitle">Thêm Khách Hàng Mới</h4>
+            <button class="db-close-btn" onclick="closeFormModal()">&times;</button>
+          </div>
+          <div class="db-submodal-body">
+            <input type="hidden" id="formGuestId" value="" />
+            <div class="db-form-group">
+              <label>Mã quay thưởng (*):</label>
+              <input type="text" id="formCodeInput" placeholder="Nhập mã (vd: 001, 045)..." autocomplete="off" />
+            </div>
+            <div class="db-form-group">
+              <label>Tên Đại Lý / Khách hàng (*):</label>
+              <input type="text" id="formNameInput" placeholder="Nhập tên đại lý hoặc khách hàng..." autocomplete="off" />
+            </div>
+          </div>
+          <div class="db-submodal-footer">
+            <button class="btn-submodal-cancel" onclick="closeFormModal()">HỦY BỎ</button>
+            <button class="btn-submodal-save" onclick="submitGuestForm()">LƯU THÔNG TIN</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Modal Xác Nhận Xóa (Popup ở giữa màn hình) -->
+      <div id="dbConfirmDeleteModal" class="db-submodal-overlay" style="display: none;">
+        <div class="db-submodal-box">
+          <div class="db-submodal-header db-delete-header">
+            <h4>Xác Nhận Xóa Khách Hàng</h4>
+            <button class="db-close-btn" onclick="closeConfirmDeleteModal()">&times;</button>
+          </div>
+          <div class="db-submodal-body">
+            <p id="deleteConfirmText" style="margin: 0; font-size: 1.05rem; color: #1e293b; text-align: center; line-height: 1.6;">
+              Bạn có chắc chắn muốn xóa khách hàng này không?
+            </p>
+          </div>
+          <div class="db-submodal-footer">
+            <button class="btn-submodal-cancel" onclick="closeConfirmDeleteModal()">HỦY BỎ</button>
+            <button class="btn-submodal-delete" onclick="executeDeleteGuest()">ĐỒNG Ý XÓA</button>
+          </div>
+        </div>
+      </div>
       <!-- MÀN HÌNH POPUP CHÍNH NẰM TRỌN TRONG MÀN LED CHÍNH 7x3 -->
       <div id="finalScreen" class="final-screen">
         <canvas id="popupFireworks"></canvas>
@@ -226,6 +715,11 @@
               d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
           </svg>
         </button>
+        <button onclick="openDatabaseModal()" class="icon-btn" data-tooltip="Quản lý CSDL (Supabase)">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.26 6 2s-2.13 2-6 2-6-1.26-6-2 2.13-2 6-2zm6 12c0 .74-2.13 2-6 2s-6-1.26-6-2v-2.18c1.47.74 3.63 1.18 6 1.18s4.53-.44 6-1.18V17zm0-4.5c0 .74-2.13 2-6 2s-6-1.26-6-2v-2.18c1.47.74 3.63 1.18 6 1.18s4.53-.44 6-1.18V12.5z"/>
+          </svg>
+        </button>
         <button onclick="exportToPDF()" class="icon-btn" data-tooltip="Tải danh sách PDF">
           <svg viewBox="0 0 24 24">
             <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
@@ -247,6 +741,14 @@
 
 
   <script>
+    // --- 🔑 CẤU HÌNH KẾT NỐI SUPABASE ---
+    const SUPABASE_URL = 'https://whubnwqgzlmnxljarwku.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_z2LDW0sYz1E_XswwsMEP5g_mkrnZXrj';
+    
+    const _supabase = (typeof supabase !== 'undefined' && SUPABASE_URL && SUPABASE_ANON_KEY) 
+      ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
+      : null;
+
     let dbEmployees = {};
     let validCodes = [];
     let usedCodes = [];
@@ -273,13 +775,351 @@
       }
     }
 
-    const CELL_HEIGHT = 170;
+    // --- 🗄️ QUẢN LÝ DỮ LIỆU DATABASE SUPABASE (CRUD - CLEAN STYLE) ---
+    let rawSupabaseList = [];
+
+    async function openDatabaseModal() {
+      document.getElementById('dbManagementModal').style.display = 'flex';
+      await fetchDatabaseRows();
+    }
+
+    function closeDatabaseModal() {
+      document.getElementById('dbManagementModal').style.display = 'none';
+    }
+
+    async function fetchDatabaseRows() {
+      const tbody = document.getElementById('dbTableBody');
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #0284c7; padding: 20px; font-weight: 600;">⏳ Đang tải dữ liệu từ Supabase...</td></tr>`;
+
+      try {
+        if (!_supabase) {
+          throw new Error("Chưa kết nối được với Supabase!");
+        }
+
+        const { data, error } = await _supabase
+          .from('khach_moi')
+          .select('*')
+          .order('id', { ascending: true });
+
+        if (error) throw error;
+
+        rawSupabaseList = data || [];
+        renderDatabaseTable();
+      } catch (err) {
+        console.error("Lỗi lấy dữ liệu Supabase:", err);
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #ef4444; padding: 20px; font-weight: 600;">⚠️ Lỗi: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderDatabaseTable() {
+      const tbody = document.getElementById('dbTableBody');
+      const searchKey = (document.getElementById('dbSearchInput').value || '').trim().toLowerCase();
+
+      const filtered = rawSupabaseList.filter(row => {
+        const code = String(row['ma_quay'] ?? row['code'] ?? row['id'] ?? '').toLowerCase();
+        const name = String(row['ten_dai_ly'] ?? row['name'] ?? '').toLowerCase();
+        return code.includes(searchKey) || name.includes(searchKey);
+      });
+
+      document.getElementById('dbTotalCount').innerText = `Tổng số: ${filtered.length} / ${rawSupabaseList.length} khách`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px;">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach((row) => {
+        const rowId = row.id;
+        const rawCode = row['ma_quay'] ?? row['code'] ?? '';
+        const codePadded = String(rawCode).padStart(3, '0');
+        const name = row['ten_dai_ly'] ?? row['name'] ?? '';
+
+        const safeCode = String(codePadded).replace(/'/g, "\\'");
+        const safeName = String(name).replace(/'/g, "\\'");
+
+        html += `
+          <tr>
+            <td style="color: #64748b; font-weight: 600;">${rowId}</td>
+            <td><span class="db-code-badge">${codePadded}</span></td>
+            <td style="font-weight: 500; color: #0f172a;">${name}</td>
+            <td style="text-align: center;">
+              <button class="btn-db-edit" onclick="openFormModalForEdit(${rowId}, '${safeCode}', '${safeName}')">Sửa</button>
+              <button class="btn-db-delete" onclick="openConfirmDeleteModal(${rowId}, '${safeCode}', '${safeName}')">Xóa</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // --- LOGIC NHẬP TỪ FILE EXCEL NÂNG CAO ---
+    function downloadExcelTemplate() {
+      const templateData = [
+        { "Mã quay thưởng": "001", "Tên Đại Lý / Khách Hàng": "Đại Lý Vĩnh Phúc" },
+        { "Mã quay thưởng": "002", "Tên Đại Lý / Khách Hàng": "Công Ty Kim Long" },
+        { "Mã quay thưởng": "003", "Tên Đại Lý / Khách Hàng": "Đại Lý Quyến Thẩm" },
+        { "Mã quay thưởng": "004", "Tên Đại Lý / Khách Hàng": "Đại Lý Sơn Dương" }
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(templateData);
+      worksheet['!cols'] = [
+        { wch: 20 },
+        { wch: 45 }
+      ];
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachKhachHang");
+      XLSX.writeFile(workbook, "Mau_Danh_Sach_Khach_Hang_Quay_Thuong.xlsx");
+    }
+
+    function triggerExcelImport() {
+      document.getElementById('excelFileInput').click();
+    }
+
+    async function handleExcelImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        if (!_supabase) throw new Error("Chưa khởi tạo Supabase");
+
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+        if (!jsonData || jsonData.length === 0) {
+          alert("File Excel rỗng hoặc không có dữ liệu!");
+          return;
+        }
+
+        const newGuests = [];
+        jsonData.forEach(row => {
+          let code = row['ma_quay'] || row['code'] || row['Mã quay thưởng'] || row['Mã quay'] || row['Mã'] || row['Code'];
+          let agencyName = row['ten_dai_ly'] || row['name'] || row['Tên đại lý'] || row['Ten dai ly'] || row['Tên khách hàng'] || row['Tên'] || row['Đại lý'] || '';
+
+          if (code == null) {
+            for (let key in row) {
+              const cleanKey = key.trim().toLowerCase();
+              if (cleanKey.includes('mã') || cleanKey.includes('code')) {
+                code = row[key];
+              }
+              if (!agencyName && (cleanKey.includes('tên') || cleanKey.includes('đại lý') || cleanKey.includes('khách'))) {
+                agencyName = row[key];
+              }
+            }
+          }
+
+          if (code != null) {
+            let codeStr = String(code).trim();
+            if (/^\d+$/.test(codeStr)) {
+              codeStr = codeStr.padStart(3, '0');
+            }
+            newGuests.push({
+              ma_quay: codeStr,
+              ten_dai_ly: String(agencyName || '').trim()
+            });
+          }
+        });
+
+        if (newGuests.length === 0) {
+          alert("Không tìm thấy danh sách khách hàng hợp lệ trong file Excel!");
+          return;
+        }
+
+        const { error } = await _supabase
+          .from('khach_moi')
+          .insert(newGuests);
+
+        if (error) throw error;
+
+        alert(`✅ Nhập thành công ${newGuests.length} khách hàng từ file Excel!`);
+        event.target.value = ''; // Reset input
+        await fetchDatabaseRows();
+        await loadDataFromSupabase(); // Đồng bộ lại game quay thưởng
+      } catch (err) {
+        console.error("Lỗi Import Excel:", err);
+        alert("⚠️ Lỗi nhập file Excel: " + err.message);
+        event.target.value = '';
+      }
+    }
+
+    // --- LOGIC SUB-MODAL THÊM / SỬA / XÓA BẰNG POPUP CĂN GIỮA MÀN HÌNH ---
+    let pendingDeleteId = null;
+
+    function openFormModalForAdd() {
+      document.getElementById('formGuestId').value = '';
+      document.getElementById('formCodeInput').value = '';
+      document.getElementById('formNameInput').value = '';
+      document.getElementById('dbFormTitle').innerText = 'Thêm Khách Hàng Mới';
+      document.getElementById('dbFormModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('formCodeInput').focus(), 100);
+    }
+
+    function openFormModalForEdit(id, code, name) {
+      document.getElementById('formGuestId').value = id;
+      document.getElementById('formCodeInput').value = String(code).padStart(3, '0');
+      document.getElementById('formNameInput').value = name;
+      document.getElementById('dbFormTitle').innerText = 'Chỉnh Sửa Khách Hàng';
+      document.getElementById('dbFormModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('formNameInput').focus(), 100);
+    }
+
+    function closeFormModal() {
+      document.getElementById('dbFormModal').style.display = 'none';
+    }
+
+    async function submitGuestForm() {
+      const id = document.getElementById('formGuestId').value;
+      let code = (document.getElementById('formCodeInput').value || '').trim();
+      const name = (document.getElementById('formNameInput').value || '').trim();
+
+      if (!code || !name) {
+        alert("Vui lòng nhập đầy đủ Mã quay thưởng và Tên đại lý!");
+        return;
+      }
+
+      // Tự động đảm bảo mã quay có 3 chữ số nếu người dùng nhập số (vd: "1" -> "001", "45" -> "045")
+      if (/^\d+$/.test(code)) {
+        code = code.padStart(3, '0');
+      }
+
+      try {
+        if (!_supabase) throw new Error("Chưa khởi tạo Supabase");
+
+        if (!id) {
+          // Thêm mới khách hàng
+          const { error } = await _supabase
+            .from('khach_moi')
+            .insert([{ ma_quay: code, ten_dai_ly: name }]);
+          if (error) throw error;
+        } else {
+          // Cập nhật thông tin khách hàng
+          const { error } = await _supabase
+            .from('khach_moi')
+            .update({ ma_quay: code, ten_dai_ly: name })
+            .eq('id', id);
+          if (error) throw error;
+        }
+
+        closeFormModal();
+        await fetchDatabaseRows();
+        await loadDataFromSupabase(); // Đồng bộ lại game quay thưởng
+      } catch (err) {
+        console.error("Lỗi lưu dữ liệu:", err);
+        alert("⚠️ Lỗi lưu dữ liệu: " + err.message + "\n(Vui lòng kiểm tra quyền RLS trên Supabase)");
+      }
+    }
+
+    function openConfirmDeleteModal(id, code, name) {
+      pendingDeleteId = id;
+      document.getElementById('deleteConfirmText').innerHTML = `
+        Bạn có chắc chắn muốn xóa khách hàng:<br/>
+        <strong style="color: #0f172a; font-size: 1.15rem; display: inline-block; margin-top: 6px;">"${name}"</strong> (Mã quay: <strong style="color: #2563eb;">${code}</strong>)<br/>
+        khỏi CSDL Supabase không?
+      `;
+      document.getElementById('dbConfirmDeleteModal').style.display = 'flex';
+    }
+
+    function closeConfirmDeleteModal() {
+      pendingDeleteId = null;
+      document.getElementById('dbConfirmDeleteModal').style.display = 'none';
+    }
+
+    async function executeDeleteGuest() {
+      if (!pendingDeleteId) return;
+
+      try {
+        const { error } = await _supabase
+          .from('khach_moi')
+          .delete()
+          .eq('id', pendingDeleteId);
+
+        if (error) throw error;
+
+        closeConfirmDeleteModal();
+        await fetchDatabaseRows();
+        await loadDataFromSupabase(); // Đồng bộ lại game quay thưởng
+      } catch (err) {
+        console.error("Lỗi xóa khách:", err);
+        alert("⚠️ Lỗi xóa khách: " + err.message);
+      }
+    }
 
     window.onload = function () {
-      loadDataFromExcel();
+      loadDataFromSupabase();
     };
 
-    // ⭐ TỰ ĐỘNG ĐỌC EXCEL TRONG THƯ MỤC
+    // ⭐ TỰ ĐỘNG ĐỌC DỮ LIỆU TỪ SUPABASE
+    async function loadDataFromSupabase() {
+      DANH_SACH_NHAN_VIEN.length = 0; // Xóa danh sách mặc định
+
+      try {
+        if (!_supabase || SUPABASE_URL.includes('YOUR_PROJECT_ID')) {
+          console.warn("Chưa cấu hình Supabase URL/KEY. Đang đọc dữ liệu từ file Excel làm phương án dự phòng...");
+          await loadDataFromExcel();
+          return;
+        }
+
+        // Đọc dữ liệu từ bảng 'khach_moi' trên Supabase
+        const { data, error } = await _supabase
+          .from('khach_moi')
+          .select('*');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          data.forEach(row => {
+            // Ưu tiên đọc trực tiếp ma_quay và ten_dai_ly theo đúng sơ đồ Database
+            let code = row['ma_quay'] ?? row['ma_quay_thuong'] ?? row['code'] ?? row['Mã quay thưởng'] ?? row['Code'];
+            let agencyName = row['ten_dai_ly'] ?? row['name'] ?? row['Tên đại lý'] ?? row['Ten dai ly'] ?? row['Tên khách hàng'] ?? '';
+
+            // Nếu không tìm thấy cột mã chính xác thì mới quét tự động
+            if (code == null) {
+              for (let key in row) {
+                const cleanKey = key.trim().toLowerCase().replace(/_/g, '');
+                if (cleanKey.includes('ma') || cleanKey.includes('code')) {
+                  code = row[key];
+                  break;
+                }
+              }
+            }
+            if (!agencyName) {
+              for (let key in row) {
+                const cleanKey = key.trim().toLowerCase().replace(/_/g, '');
+                if (cleanKey.includes('ten') || cleanKey.includes('daily') || cleanKey.includes('khach')) {
+                  agencyName = row[key];
+                  break;
+                }
+              }
+            }
+
+            if (code != null) {
+              const nameStr = String(agencyName || '').trim();
+              DANH_SACH_NHAN_VIEN.push({
+                code: String(code).padStart(3, '0'),
+                name: nameStr,
+                pos: nameStr,
+                status: row.status ?? 1
+              });
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi đọc dữ liệu từ Supabase:", error);
+        alert("⚠️ Lỗi kết nối Supabase: " + error.message + "\n\nĐang tự động chuyển sang đọc file Excel...");
+        await loadDataFromExcel();
+        return;
+      } finally {
+        if (DANH_SACH_NHAN_VIEN.length === 0) {
+          alert("⚠️ KHÔNG CÓ DỮ LIỆU:\n\nKhông có dữ liệu khách hàng nào từ Supabase hoặc file Excel!");
+        }
+        loadDataFromJS(); // Khởi tạo danh sách quay thưởng
+      }
+    }
+
+    // ⭐ TỰ ĐỘNG ĐỌC EXCEL TRONG THƯ MỤC (DỰ PHÒNG)
     async function loadDataFromExcel() {
       // BƯỚC 1: Xóa sạch danh sách mẫu (Khách hàng 0001->0200) được sinh tự động ở data.js
       DANH_SACH_NHAN_VIEN.length = 0;
@@ -1177,6 +2017,19 @@
 
     // ⭐ CHỨC NĂNG 1: XỬ LÝ PHÍM BẤM
     document.addEventListener("keydown", function (event) {
+      // BỎ QUA TẤT CẢ PHÍM TẮT NẾU ĐANG NHẬP TRONG Ô INPUT/TEXTAREA HOẶC ĐANG MỞ MODAL CSDL
+      const tag = (event.target && event.target.tagName || '').toUpperCase();
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (event.target && event.target.isContentEditable)) {
+        return;
+      }
+
+      const isDbOpen = document.getElementById('dbManagementModal')?.style.display === 'flex' ||
+                       document.getElementById('dbFormModal')?.style.display === 'flex' ||
+                       document.getElementById('dbConfirmDeleteModal')?.style.display === 'flex';
+      if (isDbOpen) {
+        return;
+      }
+
       // ⭐ PHÍM 1: Hiện thumb tổng quan giải thưởng
       if (event.key === '1') {
         event.preventDefault();
