@@ -365,15 +365,15 @@ body {
   max-width: 320px;
 }
 
-.header-logo:nth-child(1), .header-logo:nth-child(4) {
+.header-logo:nth-child(1) {
   justify-self: end; /* Đẩy logo trái sát lại gần logo giữa */
 }
 
-.header-logo:nth-child(2), .header-logo:nth-child(5) {
+.header-logo:nth-child(2) {
   justify-self: center; /* Căn giữa hoàn hảo cho logo PMT (hoặc logo giữa) */
 }
 
-.header-logo:nth-child(3), .header-logo:nth-child(6) {
+.header-logo:nth-child(3) {
   justify-self: start; /* Đẩy logo phải sát lại gần logo giữa */
 }
 

@@ -56,10 +56,6 @@
   <header class="app-header">
     <div class="lantern-left">✨</div>
     <div class="header-logos">
-      <img src="Logo/logo trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
-      <img src="Logo/logo giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
-        title="Bấm để tải lại trang" onerror="this.style.display='none'" />
-      <img src="Logo/logo phai.png" alt="Logo Phải" class="header-logo" onerror="this.style.display='none'" />
       <img src="Logo/logo HV trai.png" alt="Logo Trái" class="header-logo" onerror="this.style.display='none'" />
       <img src="Logo/logo PMT giua.png" alt="Logo Giữa" class="header-logo" onclick="window.location.reload()"
         title="Bấm để tải lại trang" onerror="this.style.display='none'" />
@@ -132,7 +128,8 @@
             🏆 TẤT CẢ GIẢI THƯỞNG 🏆</div>
         </div>
         <div id="allPrizesList"
-          style="flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 18px;"></div>
+          style="flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 18px;">
+        </div>
       </div>
 
     </div>
@@ -179,7 +176,8 @@
 
       <!-- OVERLAY ẢNH TẤT CẢ GIẢI THƯỞNG (Phím 1 = hiện, Phím 2 = ẩn) - Nằm trọn trong màn LED chính 7x3 -->
       <div id="awardThumbOverlay" class="award-thumb-overlay" onclick="hideAwardThumb()">
-        <img src="img/tatcagiaithuong.png" alt="Tất cả giải thưởng" class="award-full-img" onerror="if(this.src.endsWith('.png')){this.src='img/tatcagiaithuong.jpg';}" />
+        <img src="img/tatcagiaithuong.png" alt="Tất cả giải thưởng" class="award-full-img"
+          onerror="if(this.src.endsWith('.png')){this.src='img/tatcagiaithuong.jpg';}" />
       </div>
 
       <!-- Wrapper mới chứa slots và nút quay -->
@@ -209,7 +207,7 @@
       </div>
 
       <p class="instruction-text" id="introDate">
-        Phú Thọ, ngày 02 tháng 08 năm 2026
+        Phú Thọ, ngày 02 tháng 08 năm 2026 - Đây là trong One
       </p>
     </div>
 
@@ -330,7 +328,7 @@
       } finally {
         // BƯỚC 2: Kiểm tra lại. Nếu không có ai thì báo lỗi rõ ràng.
         if (DANH_SACH_NHAN_VIEN.length === 0) {
-          alert("⚠️ LỖI NGHIÊM TRỌNG:\n\nKhông thể đọc được danh sách từ Excel.\nHãy đảm bảo:\n1. Tên file đúng là: excel/danhsachkhachmoi.xlsx\n2. Mở file HTML qua công cụ Live Server (không click đúp).");
+          alert("⚠️ LỖI NGHIÊM TRỌNG:\n\nKhông thể đọc được danh sách từ Excel.\nHãy đảm bảo:\n1. Tên file đúng là: danhsachkhachmoi.xlsx\n2. File Excel nằm cùng thư mục với index.html\n3. Mở file HTML qua công cụ Live Server (không click đúp).");
         }
         loadDataFromJS(); // Khởi tạo app sau khi đã có dữ liệu
       }
